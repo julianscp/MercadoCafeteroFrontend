@@ -55,34 +55,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const warningTimerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const bootstrap = async () => {
-      try {
-        const storedToken =
-          typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-        if (storedToken) {
-          api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-          const profileRes = await api.get<User>("/autenticacion/perfil");
-          setUser(profileRes.data);
-          setToken(storedToken);
-          // Iniciar el timer de inactividad si hay un usuario logueado
-          startInactivityTimer();
-        }
-      } catch {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        delete api.defaults.headers.common["Authorization"];
-        setUser(null);
-        setToken(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    bootstrap();
-  }, [startInactivityTimer]);
-
   // Función para iniciar el timer de inactividad
   const startInactivityTimer = useCallback(() => {
     // Limpiar timers existentes
@@ -123,6 +95,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       startInactivityTimer();
     }
   }, [user, token, startInactivityTimer]);
+
+  useEffect(() => {
+    const bootstrap = async () => {
+      try {
+        const storedToken =
+          typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+        if (storedToken) {
+          api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+          const profileRes = await api.get<User>("/autenticacion/perfil");
+          setUser(profileRes.data);
+          setToken(storedToken);
+          // Iniciar el timer de inactividad si hay un usuario logueado
+          startInactivityTimer();
+        }
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        delete api.defaults.headers.common["Authorization"];
+        setUser(null);
+        setToken(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    bootstrap();
+  }, [startInactivityTimer]);
 
   // Eventos que indican actividad del usuario
   useEffect(() => {

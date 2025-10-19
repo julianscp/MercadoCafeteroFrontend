@@ -38,7 +38,7 @@ export default function ComplaintsManagement() {
 
   const loadComplaints = async () => {
     try {
-      const response = await api.get('/clientes/reclamos');
+      const response = await api.get<Complaint[]>('/clientes/reclamos');
       setComplaints(response.data);
     } catch (err: any) {
       setError('Error cargando reclamos');
@@ -49,7 +49,7 @@ export default function ComplaintsManagement() {
 
   const loadOrders = async () => {
     try {
-      const response = await api.get('/clientes/pedidos');
+      const response = await api.get<any[]>('/clientes/pedidos');
       setOrders(response.data);
     } catch (err: any) {
       console.error('Error cargando pedidos:', err);

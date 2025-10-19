@@ -36,7 +36,7 @@ export default function LogsPage() {
   const loadLogs = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/logs');
+      const response = await api.get<LogEntry[]>('/logs');
       setLogs(response.data);
     } catch (err: any) {
       setError('Error cargando logs');
@@ -57,7 +57,7 @@ export default function LogsPage() {
       if (filters.dateFrom) params.append('dateFrom', filters.dateFrom);
       if (filters.dateTo) params.append('dateTo', filters.dateTo);
 
-      const response = await api.get(`/logs?${params.toString()}`);
+      const response = await api.get<LogEntry[]>(`/logs?${params.toString()}`);
       setLogs(response.data);
     } catch (err: any) {
       setError('Error aplicando filtros');

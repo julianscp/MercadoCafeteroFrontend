@@ -55,6 +55,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const warningTimerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const logout = useCallback(() => {
+    // Limpiar todos los timers
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
+    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+    
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    delete api.defaults.headers.common["Authorization"];
+    setUser(null);
+    setToken(null);
+    setShowTimeoutWarning(false);
+    setTimeLeft(0);
+    router.push("/auth/login");
+  }, []);
+
   // Función para iniciar el timer de inactividad
   const startInactivityTimer = useCallback(() => {
     // Limpiar timers existentes
@@ -177,21 +193,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     saveAuth(profileRes.data, jwt);
   };
 
-  const logout = () => {
-    // Limpiar todos los timers
-    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
-    if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-    
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    delete api.defaults.headers.common["Authorization"];
-    setUser(null);
-    setToken(null);
-    setShowTimeoutWarning(false);
-    setTimeLeft(0);
-    router.push("/auth/login");
-  };
 
   const register = async (data: {
     email: string;

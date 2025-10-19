@@ -60,7 +60,7 @@ export default function ShoppingCart() {
   const loadProducts = async () => {
     try {
       console.log('Cargando productos...');
-      const response = await api.get('/productos');
+      const response = await api.get<Product[]>('/productos');
       console.log('Productos cargados:', response.data.length);
       setProducts(response.data);
     } catch (err: any) {
@@ -71,7 +71,7 @@ export default function ShoppingCart() {
 
   const loadOrders = async () => {
     try {
-      const response = await api.get('/clientes/pedidos');
+      const response = await api.get<Order[]>('/clientes/pedidos');
       console.log('Órdenes cargadas:', response.data);
       setOrders(response.data);
     } catch (err: any) {

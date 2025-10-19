@@ -49,7 +49,7 @@ export default function CustomerProfile() {
     try {
       setLoading(true);
       console.log('Loading profile...');
-      const response = await api.get('/usuarios/clientes/perfil');
+      const response = await api.get<CustomerProfile>('/usuarios/clientes/perfil');
       console.log('Profile loaded:', response.data);
       console.log('Statistics:', response.data.estadisticas);
       setProfile(response.data);

@@ -1,0 +1,219 @@
+@import "tailwindcss";
+@tailwind utilities;
+
+/* Estilos globales de body */
+body {
+  background-color: #FFEAEA; /* Fondo rojo muy claro */
+  color: #000000;           /* Texto negro */
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Enlaces */
+a {
+  color: #B33A3A;           /* Rojo principal */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #E99696;           /* Rojo más claro al pasar el cursor */
+}
+
+/* Botones */
+button {
+  font-weight: 700;          /* Bold */
+  border-radius: 0.375rem;   /* Rounded md */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button.primary {
+  background-color: #B33A3A;
+  color: #FFFFFF;
+}
+
+button.primary:hover {
+  background-color: #E99696;
+}
+
+button.secondary {
+  background-color: #6B4226;
+  color: #FFFFFF;
+}
+
+button.secondary:hover {
+  background-color: #A67C52;
+}
+
+/* Bordes y cajas */
+.border-neutral {
+  border-color: #171717;
+}
+
+/* Estilos para el sistema de tamaño de texto */
+:root {
+  --custom-font-size: 16px;
+}
+
+/* Aplicar tamaño de fuente personalizado a elementos específicos */
+.text-responsive {
+  font-size: var(--custom-font-size) !important;
+}
+
+/* Clases para diferentes tamaños de texto */
+.text-small {
+  font-size: 14px !important;
+}
+
+.text-small * {
+  font-size: 14px !important;
+}
+
+.text-medium {
+  font-size: 16px !important;
+}
+
+.text-medium * {
+  font-size: 16px !important;
+}
+
+.text-large {
+  font-size: 18px !important;
+}
+
+.text-large * {
+  font-size: 18px !important;
+}
+
+.text-extra-large {
+  font-size: 20px !important;
+}
+
+.text-extra-large * {
+  font-size: 20px !important;
+}
+
+/* Ajustar tamaños específicos para elementos importantes */
+.text-small h1 { font-size: 20px !important; }
+.text-small h2 { font-size: 18px !important; }
+.text-small h3 { font-size: 16px !important; }
+
+.text-medium h1 { font-size: 24px !important; }
+.text-medium h2 { font-size: 20px !important; }
+.text-medium h3 { font-size: 18px !important; }
+
+.text-large h1 { font-size: 28px !important; }
+.text-large h2 { font-size: 24px !important; }
+.text-large h3 { font-size: 20px !important; }
+
+.text-extra-large h1 { font-size: 32px !important; }
+.text-extra-large h2 { font-size: 28px !important; }
+.text-extra-large h3 { font-size: 24px !important; }
+
+/* Asegurar que el componente de tamaño de texto tenga máxima prioridad */
+.text-size-toggle {
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+.text-size-toggle * {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+/* Estilos para mejorar visibilidad del carrito de compras */
+.shopping-cart-container {
+  position: relative;
+  z-index: 1;
+}
+
+.shopping-cart-container * {
+  color: inherit !important;
+  visibility: visible !important;
+}
+
+.shopping-cart-container button {
+  background-color: #2563eb !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.shopping-cart-container button:disabled {
+  background-color: #9ca3af !important;
+  cursor: not-allowed !important;
+}
+
+.shopping-cart-container input {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.shopping-cart-container label {
+  color: #374151 !important;
+  font-weight: 500 !important;
+}
+
+.shopping-cart-container span {
+  color: #1f2937 !important;
+}
+
+/* Estilos para botones del panel de administración */
+.admin-panel button {
+  background-color: #2563eb !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-panel button:hover {
+  background-color: #1d4ed8 !important;
+  opacity: 0.9 !important;
+}
+
+.admin-panel button:disabled {
+  background-color: #9ca3af !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+.admin-panel .input {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+}
+
+.admin-panel select {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+}
+
+/* Botones específicos del admin */
+.admin-panel .btn-primary {
+  background-color: #2563eb !important;
+  color: white !important;
+}
+
+.admin-panel .btn-refresh {
+  background-color: #059669 !important;
+  color: white !important;
+}
+
+.admin-panel .btn-search {
+  background-color: #7c3aed !important;
+  color: white !important;
+}
+
+

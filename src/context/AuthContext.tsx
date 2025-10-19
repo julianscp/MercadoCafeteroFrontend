@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     bootstrap();
-  }, []);
+  }, [startInactivityTimer]);
 
   // Función para iniciar el timer de inactividad
   const startInactivityTimer = useCallback(() => {
@@ -115,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     inactivityTimerRef.current = setTimeout(() => {
       logout();
     }, INACTIVITY_TIMEOUT);
-  }, []);
+  }, [logout]);
 
   // Función para resetear el timer de inactividad
   const resetInactivityTimer = useCallback(() => {

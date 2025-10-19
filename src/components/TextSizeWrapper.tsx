@@ -8,13 +8,10 @@ interface TextSizeWrapperProps {
 }
 
 export default function TextSizeWrapper({ children }: TextSizeWrapperProps) {
-  const [isClient, setIsClient] = useState(false);
-  
   useApplyTextSize();
 
   // Aplicar también cuando el componente se monta
   useEffect(() => {
-    setIsClient(true);
     
     const applyGlobalStyles = () => {
       const style = document.createElement('style');

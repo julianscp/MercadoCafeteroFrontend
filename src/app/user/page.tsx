@@ -27,6 +27,10 @@ export default function UserHomePage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
+  // Detalles del producto
+  const [detalleProducto, setDetalleProducto] = useState<Producto | null>(null);
+  const [mostrarDetalle, setMostrarDetalle] = useState(false);
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -43,6 +47,12 @@ export default function UserHomePage() {
     };
     load();
   }, []);
+
+  // Función para abrir detalles
+  function abrirDetalles(producto: Producto) {
+    setDetalleProducto(producto);
+    setMostrarDetalle(true);
+  }
 
   return (
     <section className="space-y-8">
@@ -244,6 +254,7 @@ export default function UserHomePage() {
                       </div>
                       
                       <button 
+                        onClick={() => abrirDetalles(p)}
                         className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-200 transform hover:scale-105 ${
                           p.stock > 0
                             ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg hover:shadow-xl'
@@ -260,6 +271,141 @@ export default function UserHomePage() {
             </div>
           </>
         )
+      )}
+
+      {/* Modal de Detalles */}
+      {mostrarDetalle && detalleProducto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
+            {/* Header */}
+            <div className="sticky top-0 bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-6 py-4 flex items-center justify-between z-10">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-800 to-orange-800 bg-clip-text text-transparent">
+                Detalles del Producto
+              </h2>
+              <button
+                onClick={() => setMostrarDetalle(false)}
+                className="text-gray-400 hover:text-gray-600 text-3xl transition-colors"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Contenido */}
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Imagen */}
+                <div className="space-y-4">
+                  <div className="aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg">
+                    {detalleProducto.imagenUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={detalleProducto.imagenUrl}
+                        alt={detalleProducto.nombre}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-8xl mb-4">☕</div>
+                          <div className="text-lg text-gray-400">Sin imagen</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-semibold">
+                      {detalleProducto.categoria}
+                    </span>
+                    {detalleProducto.subcategoria && (
+                      <span className="px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-semibold">
+                        {detalleProducto.subcategoria}
+                      </span>
+                    )}
+                    <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                      detalleProducto.stock > 10
+                        ? 'bg-green-100 text-green-800'
+                        : detalleProducto.stock > 0
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {detalleProducto.stock > 0 ? `${detalleProducto.stock} disponibles` : 'Agotado'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Información */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-4xl font-bold text-gray-900 mb-2">
+                      {detalleProducto.nombre}
+                    </h3>
+                    {detalleProducto.marca && (
+                      <p className="text-xl text-gray-600">Marca: {detalleProducto.marca}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Precio */}
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 border-2 border-amber-200">
+                      <p className="text-sm text-gray-600 mb-2 font-medium">Precio</p>
+                      <p className="text-4xl font-bold bg-gradient-to-r from-amber-700 to-orange-700 bg-clip-text text-transparent">
+                        {currencyCOP(detalleProducto.precio)}
+                      </p>
+                    </div>
+
+                    {/* Descripción */}
+                    <div className="bg-gray-50 rounded-xl p-6">
+                      <p className="text-sm text-gray-600 mb-3 font-semibold uppercase tracking-wide">Descripción</p>
+                      <p className="text-gray-800 leading-relaxed">{detalleProducto.descripcion}</p>
+                    </div>
+
+                    {/* Disponibilidad */}
+                    <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                          <span className="text-2xl">📦</span>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600 font-medium">Disponibilidad</p>
+                          <p className={`text-xl font-bold ${
+                            detalleProducto.stock > 10
+                              ? 'text-green-700'
+                              : detalleProducto.stock > 0
+                              ? 'text-yellow-700'
+                              : 'text-red-700'
+                          }`}>
+                            {detalleProducto.stock > 0 
+                              ? `${detalleProducto.stock} unidades disponibles` 
+                              : 'Producto agotado'
+                            }
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Acciones */}
+                  <div className="flex gap-3 pt-4">
+                    <Link
+                      href="/cliente/carrito"
+                      className="flex-1 text-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 text-white font-bold text-lg hover:from-amber-600 hover:to-orange-600 shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+                    >
+                      Ver Carrito
+                    </Link>
+                    <button
+                      onClick={() => setMostrarDetalle(false)}
+                      className="px-6 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </section>
   );

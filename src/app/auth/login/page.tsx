@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import ManualUsuario from "@/components/ManualUsuario";
 
 export default function Login() {
   const { login, user, loading } = useAuth();
@@ -41,6 +42,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FFEAEA] to-[#FFF5F5] p-8">
+      <ManualUsuario />
       <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-3xl font-extrabold mb-6 text-text">Iniciar Sesión</h1>
 

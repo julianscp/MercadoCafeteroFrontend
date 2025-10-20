@@ -1,7 +1,7 @@
 "use client";
 
 import { useApplyTextSize } from "@/hooks/useApplyTextSize";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 
 interface TextSizeWrapperProps {
   children: ReactNode;

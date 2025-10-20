@@ -75,7 +75,7 @@ export default function ManualUsuario() {
                   </p>
                   <ol className="list-decimal list-inside space-y-2 ml-4">
                     <li>
-                      Haz clic en el botón "Regístrate" en la página de inicio
+                      Haz clic en el botón &quot;Regístrate&quot; en la página de inicio
                       de sesión
                     </li>
                     <li>
@@ -112,7 +112,7 @@ export default function ManualUsuario() {
                       correspondientes
                     </li>
                     <li>
-                      Haz clic en el botón "Ingresar"
+                      Haz clic en el botón &quot;Ingresar&quot;
                     </li>
                     <li>
                       Serás redirigido automáticamente según tu tipo de cuenta
@@ -120,8 +120,8 @@ export default function ManualUsuario() {
                   </ol>
                   <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mt-4">
                     <p className="text-sm">
-                      Si olvidaste tu contraseña, haz clic en "Recuperar
-                      contraseña" y sigue las instrucciones que recibirás por
+                      Si olvidaste tu contraseña, haz clic en &quot;Recuperar
+                      contraseña&quot; y sigue las instrucciones que recibirás por
                       correo.
                     </p>
                   </div>
@@ -144,7 +144,7 @@ export default function ManualUsuario() {
                   <div>
                     <h4 className="font-semibold mb-2">Ver Detalles</h4>
                     <p className="text-gray-700">
-                      Haz clic en "Ver Detalles" para obtener información
+                      Haz clic en &quot;Ver Detalles&quot; para obtener información
                       completa sobre un producto, incluyendo descripción,
                       características y stock disponible.
                     </p>
@@ -168,7 +168,7 @@ export default function ManualUsuario() {
                   <div>
                     <h4 className="font-semibold mb-2">Ver Mis Pedidos</h4>
                     <p className="text-gray-700">
-                      Accede a la sección "Mis Pedidos" para ver el historial
+                      Accede a la sección &quot;Mis Pedidos&quot; para ver el historial
                       de tus compras, estados y detalles de cada orden.
                     </p>
                   </div>

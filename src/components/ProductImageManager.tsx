@@ -13,7 +13,7 @@ type Props = {
 export default function ProductImageManager({
   productId,
   imagenUrl,
-  imagenPublicId,
+  imagenPublicId: _imagenPublicId,
   onChanged,
 }: Props) {
   const [file, setFile] = useState<File | null>(null);

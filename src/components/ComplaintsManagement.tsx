@@ -19,7 +19,6 @@ type Complaint = {
 };
 
 export default function ComplaintsManagement() {
-  const { user } = useAuth();
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +39,7 @@ export default function ComplaintsManagement() {
     try {
       const response = await api.get<Complaint[]>('/clientes/reclamos');
       setComplaints(response.data);
-    } catch (err: any) {
+    } catch {
       setError('Error cargando reclamos');
     } finally {
       setLoading(false);

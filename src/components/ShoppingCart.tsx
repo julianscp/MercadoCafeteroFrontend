@@ -74,7 +74,7 @@ export default function ShoppingCart() {
       const response = await api.get<Order[]>('/clientes/pedidos');
       console.log('Órdenes cargadas:', response.data);
       setOrders(response.data);
-    } catch (err: any) {
+    } catch {
       setError('Error cargando pedidos');
     } finally {
       setLoading(false);
@@ -599,7 +599,7 @@ export default function ShoppingCart() {
                                 <span className="font-bold text-amber-700">${product.subtotal.toLocaleString('es-CO')}</span>
                               </div>
                             ));
-                          } catch (error) {
+                          } catch {
                             return (
                               <div className="text-sm text-gray-500">
                                 Error al cargar productos

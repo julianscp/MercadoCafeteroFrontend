@@ -73,7 +73,7 @@ export default function CustomerProfile() {
       setError(null);
       setSuccess(null);
       // No enviar el email en la actualización
-      const { email, ...updateData } = formData;
+      const { email: _email, ...updateData } = formData;
       const response = await api.put<CustomerProfile>('/usuarios/clientes/perfil', updateData);
       setProfile(response.data);
       setEditing(false);

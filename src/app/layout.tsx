@@ -7,7 +7,6 @@ import SessionTimeoutWarning from "../components/SessionTimeoutWarning";
 import TextSizeToggle from "../components/TextSizeToggle";
 import TextSizeWrapper from "../components/TextSizeWrapper";
 import ClientOnly from "../components/ClientOnly";
-import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

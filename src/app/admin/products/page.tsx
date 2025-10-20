@@ -58,6 +58,10 @@ const [logFilter, setLogFilter] = useState<{ inicio: string; fin: string; produc
   const [editData, setEditData] = useState<any | null>(null);
   const [guardandoEdit, setGuardandoEdit] = useState(false);
 
+  // Detalles (modal)
+  const [detalleProducto, setDetalleProducto] = useState<any | null>(null);
+  const [mostrarDetalle, setMostrarDetalle] = useState(false);
+
   // --------- Utilidades ----------
   function currencyCOP(n: any) {
     const val = Number(n ?? 0);
@@ -158,6 +162,12 @@ const [logFilter, setLogFilter] = useState<{ inicio: string; fin: string; produc
       alert(e?.response?.data?.message || 'No se pudo eliminar');
       setItems(prev);
     }
+  }
+
+  // --------- Detalles ----------
+  function abrirDetalles(p: any) {
+    setDetalleProducto(p);
+    setMostrarDetalle(true);
   }
 
   // --------- Editar ----------
@@ -412,6 +422,12 @@ async function buscarLogsPorRango(e: React.FormEvent) {
 
                       <td className="p-2 text-right">
                         <div className="inline-flex items-center gap-2">
+                          <button
+                            onClick={() => abrirDetalles(p)}
+                            className="rounded border border-blue-300 bg-blue-50 px-2 py-1 text-sm text-blue-700 hover:bg-blue-100"
+                          >
+                            Detalles
+                          </button>
                           <button
                             onClick={() => abrirEditar(p)}
                             className="rounded border px-2 py-1 text-sm hover:bg-gray-50"
@@ -1036,6 +1052,127 @@ async function buscarLogsPorRango(e: React.FormEvent) {
                   </button>
                 </div>
               </form>
+            </div>
+          )}
+
+          {/* Modal de Detalles */}
+          {mostrarDetalle && detalleProducto && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl m-4">
+                {/* Header */}
+                <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Detalles del Producto</h2>
+                  <button
+                    onClick={() => setMostrarDetalle(false)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                {/* Contenido */}
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Imagen */}
+                    <div className="space-y-4">
+                      <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
+                        {detalleProducto.imagenUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={detalleProducto.imagenUrl}
+                            alt={detalleProducto.nombre}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-gray-400">
+                            <svg className="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Estado */}
+                      <div className="text-center">
+                        <span className={badgeForEstado(detalleProducto.estado)}>
+                          {detalleProducto.estado ?? '—'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Información */}
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-3xl font-bold text-gray-900 mb-2">
+                          {detalleProducto.nombre}
+                        </h3>
+                        {detalleProducto.marca && (
+                          <p className="text-lg text-gray-600">{detalleProducto.marca}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 border-b">
+                          <span className="text-gray-600 font-medium">Precio:</span>
+                          <span className="text-2xl font-bold text-primary">
+                            {currencyCOP(detalleProducto.precio)}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 py-2 border-b">
+                          <div>
+                            <span className="text-gray-600 font-medium">Stock:</span>
+                            <p className="text-xl font-semibold">
+                              <span className={Number(detalleProducto.stock) <= Number(detalleProducto.stockMinimo ?? 0) ? 'text-red-600' : 'text-green-600'}>
+                                {detalleProducto.stock}
+                              </span>
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-gray-600 font-medium">Stock Mínimo:</span>
+                            <p className="text-xl font-semibold">{detalleProducto.stockMinimo ?? 0}</p>
+                          </div>
+                        </div>
+
+                        <div className="py-2 border-b">
+                          <span className="text-gray-600 font-medium">Categoría:</span>
+                          <p className="text-lg">{detalleProducto.categoria}</p>
+                          {detalleProducto.subcategoria && (
+                            <p className="text-sm text-gray-500">{detalleProducto.subcategoria}</p>
+                          )}
+                        </div>
+
+                        <div className="py-2">
+                          <span className="text-gray-600 font-medium">Descripción:</span>
+                          <p className="text-gray-800 mt-1">{detalleProducto.descripcion || 'Sin descripción'}</p>
+                        </div>
+                      </div>
+
+                      {/* Acciones */}
+                      <div className="flex gap-3 pt-4">
+                        <button
+                          onClick={() => {
+                            setMostrarDetalle(false);
+                            abrirEditar(detalleProducto);
+                          }}
+                          className="flex-1 rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary/90"
+                        >
+                          Editar Producto
+                        </button>
+                        <button
+                          onClick={() => {
+                            setMostrarDetalle(false);
+                            onEliminar(detalleProducto.id);
+                          }}
+                          className="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-red-700 hover:bg-red-100"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </>

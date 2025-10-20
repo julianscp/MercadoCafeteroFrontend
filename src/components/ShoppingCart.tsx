@@ -124,13 +124,12 @@ export default function ShoppingCart() {
       }]);
     }
 
-    // Limpiar cantidad seleccionada
     setSelectedQuantities(prev => ({
       ...prev,
       [productId]: 0
     }));
     
-    setSuccess(`Agregado al carrito: ${product.nombre} x${cantidad}`);
+    setSuccess(`✓ Agregado: ${product.nombre} x${cantidad}`);
     setTimeout(() => setSuccess(null), 3000);
   };
 
@@ -182,7 +181,6 @@ export default function ShoppingCart() {
       return;
     }
 
-    // Validar stock antes de procesar la compra
     for (const item of cart) {
       const product = products.find(p => p.id === item.productId);
       if (!product) {
@@ -199,7 +197,6 @@ export default function ShoppingCart() {
       setSubmitting(true);
       setError(null);
       
-      // Preparar productos para la orden (solo datos necesarios)
       const orderProducts = cart.map(item => ({
         productId: item.productId,
         cantidad: item.cantidad
@@ -211,33 +208,22 @@ export default function ShoppingCart() {
 
       const response = await api.post('/clientes/pedidos', orderData);
       
-      // Limpiar carrito
       setCart([]);
       
-      // Marcar productos que se actualizaron
       const productIds = orderProducts.map(p => p.productId);
       markProductsAsUpdated(productIds);
       
-      // Forzar recarga de productos con un pequeño delay para asegurar que el backend haya actualizado
       setTimeout(async () => {
         await loadProducts();
         console.log('Productos recargados después de compra');
       }, 500);
       
-      // Recargar órdenes
       await loadOrders();
       
-      setSuccess('¡Compra realizada exitosamente! El stock ha sido actualizado.');
+      setSuccess('🎉 ¡Compra realizada exitosamente!');
       setTimeout(() => setSuccess(null), 5000);
       
-      // Debug: mostrar respuesta del servidor
       console.log('Respuesta del servidor:', response.data);
-      
-      // Mostrar mensaje adicional sobre stock actualizado
-      setTimeout(() => {
-        setSuccess('Los productos han sido actualizados con el nuevo stock disponible.');
-        setTimeout(() => setSuccess(null), 3000);
-      }, 2000);
       
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Error realizando la compra');
@@ -255,354 +241,400 @@ export default function ShoppingCart() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 shopping-cart-container">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Carrito de Compras</h1>
-
-      {/* Mensajes de estado */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <p className="text-red-800">{error}</p>
-          <button 
-            onClick={() => setError(null)}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            Cerrar
-          </button>
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-          <p className="text-green-800">{success}</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Productos Disponibles */}
-        <div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Productos Disponibles</h2>
-          <div className="space-y-4 max-h-96 overflow-y-auto">
-            {products.map(product => {
-              const precioConDescuento = product.descuento 
-                ? product.precio * (1 - product.descuento / 100)
-                : product.precio;
-              
-              return (
-                <div key={product.id} className="bg-white border rounded-lg p-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-20 h-20 bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                      {product.imagenUrl ? (
-                        <img 
-                          src={product.imagenUrl} 
-                          alt={product.nombre}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                          ☕
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-800 truncate">{product.nombre}</h3>
-                      <p className="text-sm text-gray-600 line-clamp-2">{product.descripcion}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm text-gray-500">{product.categoria}</span>
-                        {product.subcategoria && (
-                          <>
-                            <span className="text-gray-300">•</span>
-                            <span className="text-sm text-gray-500">{product.subcategoria}</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className={`text-sm ${product.stock === 0 ? 'text-red-600 font-bold' : product.stock <= 5 ? 'text-orange-600 font-medium' : 'text-gray-600'} ${updatedProducts.includes(product.id) ? 'animate-pulse' : ''}`}>
-                          Stock: {product.stock}
-                        </span>
-                        {updatedProducts.includes(product.id) && (
-                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-bold animate-pulse">
-                            ¡ACTUALIZADO!
-                          </span>
-                        )}
-                        {product.stock === 0 && (
-                          <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-bold">
-                            AGOTADO
-                          </span>
-                        )}
-                        {product.stock > 0 && product.stock <= 5 && (
-                          <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full font-medium">
-                            POCO STOCK
-                          </span>
-                        )}
-                        {product.descuento && (
-                          <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
-                            -{product.descuento}%
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-2">
-                        {product.descuento ? (
-                          <>
-                            <span className="text-lg font-semibold text-primary">
-                              ${precioConDescuento.toLocaleString('es-CO')}
-                            </span>
-                            <span className="text-sm text-gray-500 line-through">
-                              ${product.precio.toLocaleString('es-CO')}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="text-lg font-semibold text-primary">
-                            ${product.precio.toLocaleString('es-CO')}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Controles de cantidad y agregar */}
-                  <div className="flex items-center gap-3 mt-4 bg-gray-50 p-3 rounded">
-                    <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-700 font-medium">Cantidad:</label>
-                      <input
-                        type="number"
-                        min="1"
-                        max={product.stock}
-                        value={selectedQuantities[product.id] || 1}
-                        onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value) || 1)}
-                        className="w-20 px-2 py-1 border border-gray-300 rounded text-center text-gray-800 bg-white"
-                        style={{ 
-                          color: '#1f2937',
-                          backgroundColor: 'white',
-                          border: '1px solid #d1d5db'
-                        }}
-                      />
-                    </div>
-                    <button
-                      onClick={() => addToCart(product.id)}
-                      disabled={product.stock === 0}
-                      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                      style={{ 
-                        backgroundColor: '#2563eb',
-                        color: 'white',
-                        border: 'none',
-                        cursor: product.stock === 0 ? 'not-allowed' : 'pointer'
-                      }}
-                    >
-                      {product.stock === 0 ? 'Sin Stock' : 'Agregar al Carrito'}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-800 to-orange-800 bg-clip-text text-transparent">
+            🛒 Mi Carrito de Compras
+          </h1>
+          <p className="text-gray-600 mt-2">Selecciona tus productos favoritos y realiza tu compra</p>
         </div>
 
-        {/* Carrito */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Mi Carrito</h2>
-            {cart.length > 0 && (
-              <button
-                onClick={clearCart}
-                className="text-sm text-red-600 hover:text-red-800 font-medium px-2 py-1 rounded hover:bg-red-50"
-                style={{ 
-                  color: '#dc2626',
-                  fontWeight: '500'
-                }}
+        {/* Mensajes de estado */}
+        {error && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-4 shadow-md animate-slide-in">
+            <div className="flex items-center">
+              <span className="text-2xl mr-3">⚠️</span>
+              <div className="flex-1">
+                <p className="text-red-800 font-medium">{error}</p>
+              </div>
+              <button 
+                onClick={() => setError(null)}
+                className="text-red-600 hover:text-red-800 text-xl font-bold"
               >
-                Vaciar Carrito
+                ×
               </button>
-            )}
+            </div>
           </div>
-          
-          <div className="bg-white border rounded-lg p-4">
-            {cart.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">El carrito está vacío</p>
-            ) : (
-              <div className="space-y-3">
-                {cart.map(item => {
-                  const product = products.find(p => p.id === item.productId);
-                  if (!product) return null;
+        )}
+
+        {success && (
+          <div className="mb-6 bg-green-50 border-l-4 border-green-500 rounded-lg p-4 shadow-md animate-slide-in">
+            <div className="flex items-center">
+              <span className="text-2xl mr-3">✓</span>
+              <p className="text-green-800 font-medium">{success}</p>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Productos Disponibles - 2 columnas */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                  <span className="text-3xl">☕</span>
+                  Productos Disponibles
+                </h2>
+                <span className="px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-semibold">
+                  {products.filter(p => p.stock > 0).length} disponibles
+                </span>
+              </div>
+              
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                {products.map(product => {
+                  const precioConDescuento = product.descuento 
+                    ? product.precio * (1 - product.descuento / 100)
+                    : product.precio;
                   
                   return (
-                    <div key={item.productId} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                      <div className="flex-1">
-                        <h4 className="font-medium">{product.nombre}</h4>
-                        <p className="text-sm text-gray-600">
-                          ${item.precioUnitario.toLocaleString('es-CO')} x {item.cantidad}
-                        </p>
-                        <p className="text-sm font-medium text-primary">
-                          Subtotal: ${item.subtotal.toLocaleString('es-CO')}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => updateCartQuantity(item.productId, item.cantidad - 1)}
-                          className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center hover:bg-gray-300 text-gray-800 font-bold"
-                          style={{ 
-                            backgroundColor: '#e5e7eb',
-                            color: '#1f2937',
-                            border: '1px solid #d1d5db'
-                          }}
-                        >
-                          -
-                        </button>
-                        <span className="w-8 text-center text-gray-800 font-medium">{item.cantidad}</span>
-                        <button
-                          onClick={() => updateCartQuantity(item.productId, item.cantidad + 1)}
-                          disabled={item.cantidad >= product.stock}
-                          className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center hover:bg-gray-300 disabled:opacity-50 text-gray-800 font-bold"
-                          style={{ 
-                            backgroundColor: '#e5e7eb',
-                            color: '#1f2937',
-                            border: '1px solid #d1d5db'
-                          }}
-                        >
-                          +
-                        </button>
-                        <button
-                          onClick={() => removeFromCart(item.productId)}
-                          className="ml-2 text-red-600 hover:text-red-800 font-bold text-lg"
-                          title="Eliminar del carrito"
-                          style={{ 
-                            color: '#dc2626',
-                            fontSize: '18px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          ✕
-                        </button>
+                    <div key={product.id} className="group bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all duration-300 hover:border-amber-300">
+                      <div className="flex items-start gap-4">
+                        {/* Imagen del producto */}
+                        <div className="w-24 h-24 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl overflow-hidden flex-shrink-0 shadow-md">
+                          {product.imagenUrl ? (
+                            <img 
+                              src={product.imagenUrl} 
+                              alt={product.nombre}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-4xl">
+                              ☕
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Info del producto */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1">
+                              <h3 className="font-bold text-gray-800 text-lg mb-1">{product.nombre}</h3>
+                              {product.marca && (
+                                <p className="text-sm text-gray-500 mb-2">{product.marca}</p>
+                              )}
+                              <p className="text-sm text-gray-600 line-clamp-2 mb-3">{product.descripcion}</p>
+                            </div>
+                          </div>
+                          
+                          {/* Categoría y badges */}
+                          <div className="flex flex-wrap items-center gap-2 mb-3">
+                            <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">
+                              {product.categoria}
+                            </span>
+                            {product.subcategoria && (
+                              <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-semibold">
+                                {product.subcategoria}
+                              </span>
+                            )}
+                            {product.descuento && (
+                              <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold animate-pulse">
+                                -{product.descuento}% OFF
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Stock */}
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className={`text-sm font-semibold px-3 py-1 rounded-full ${
+                              product.stock === 0 
+                                ? 'bg-red-100 text-red-700' 
+                                : product.stock <= 5 
+                                ? 'bg-orange-100 text-orange-700' 
+                                : 'bg-green-100 text-green-700'
+                            }`}>
+                              {product.stock === 0 ? '❌ Agotado' : `✓ ${product.stock} disponibles`}
+                            </span>
+                            {updatedProducts.includes(product.id) && (
+                              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold animate-pulse">
+                                ¡ACTUALIZADO!
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Precio */}
+                          <div className="flex items-center gap-3 mb-4">
+                            {product.descuento ? (
+                              <>
+                                <span className="text-2xl font-bold text-amber-700">
+                                  ${precioConDescuento.toLocaleString('es-CO')}
+                                </span>
+                                <span className="text-lg text-gray-400 line-through">
+                                  ${product.precio.toLocaleString('es-CO')}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-2xl font-bold text-amber-700">
+                                ${product.precio.toLocaleString('es-CO')}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Controles */}
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 bg-white border-2 border-gray-200 rounded-lg px-3 py-2">
+                              <label className="text-sm text-gray-700 font-semibold">Cantidad:</label>
+                              <input
+                                type="number"
+                                min="1"
+                                max={product.stock}
+                                value={selectedQuantities[product.id] || 1}
+                                onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value) || 1)}
+                                className="w-16 px-2 py-1 border border-gray-300 rounded text-center text-gray-800 font-semibold focus:outline-none focus:border-amber-500"
+                              />
+                            </div>
+                            <button
+                              onClick={() => addToCart(product.id)}
+                              disabled={product.stock === 0}
+                              className="flex-1 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed font-bold shadow-md hover:shadow-xl transition-all transform hover:scale-105"
+                            >
+                              {product.stock === 0 ? 'Sin Stock' : '➕ Agregar'}
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   );
                 })}
-                
-                <div className="border-t pt-3 bg-white">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-semibold text-gray-800">Total:</span>
-                    <span className="text-xl font-bold text-blue-600">
-                      ${getCartTotal().toLocaleString('es-CO')}
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleCreateOrder}
-                    disabled={submitting}
-                    className="w-full py-3 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 font-medium"
-                    style={{ 
-                      backgroundColor: '#059669',
-                      color: 'white',
-                      border: 'none',
-                      cursor: submitting ? 'not-allowed' : 'pointer'
-                    }}
-                  >
-                    {submitting ? 'Procesando Compra...' : 'Realizar Compra (Sin Pago)'}
-                  </button>
-                  <p className="text-xs text-gray-600 text-center mt-2">
-                    Esta es una compra simulada sin procesamiento de pago
-                  </p>
-                </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Historial de Pedidos */}
-      <div className="mt-12">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Historial de Compras</h2>
-        {orders.length === 0 ? (
-          <div className="bg-white border rounded-lg p-8 text-center">
-            <p className="text-gray-500">No tienes compras aún</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {orders.map(order => {
-              console.log('Estructura de orden:', order);
-              return (
-              <div key={order.id} className="bg-white border rounded-lg p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-semibold">Compra #{order.id}</h3>
-                    <p className="text-sm text-gray-600">
-                      {new Date(order.createdAt).toLocaleDateString('es-CO', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-primary">
-                      ${order.total.toLocaleString('es-CO')}
-                    </p>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      order.status === 'completado' 
-                        ? 'bg-green-100 text-green-800'
-                        : order.status === 'pendiente'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {order.status}
-                    </span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  {order.products && typeof order.products === 'string' ? (
-                    // Si products es un string JSON, parsearlo
-                    (() => {
-                      try {
-                        const productsArray = JSON.parse(order.products);
-                        return productsArray.map((product: any, index: number) => (
-                          <div key={index} className="flex justify-between text-sm">
-                            <span>{product.nombre} x {product.cantidad}</span>
-                            <span>${product.subtotal.toLocaleString('es-CO')}</span>
-                          </div>
-                        ));
-                      } catch (error) {
-                        return (
-                          <div className="text-sm text-gray-500">
-                            Error al cargar productos de la orden
-                          </div>
-                        );
-                      }
-                    })()
-                  ) : order.products && Array.isArray(order.products) ? (
-                    // Si products es un array directo
-                    order.products.map((orderProduct: any, index: number) => {
-                      const product = orderProduct.producto || orderProduct;
-                      const cantidad = orderProduct.cantidad;
-                      const precio = product.precio || 0;
-                      const descuento = product.descuento || 0;
-                      const precioConDescuento = descuento ? precio * (1 - descuento / 100) : precio;
-                      const subtotal = cantidad * precioConDescuento;
-                      
-                      return (
-                        <div key={index} className="flex justify-between text-sm">
-                          <span>{product.nombre} x {cantidad}</span>
-                          <span>${subtotal.toLocaleString('es-CO')}</span>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="text-sm text-gray-500">
-                      No hay productos disponibles para esta orden
-                    </div>
+          {/* Carrito - 1 columna */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6">
+              <div className="bg-white rounded-2xl shadow-xl p-6 border-4 border-amber-200">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <span className="text-3xl">🛒</span>
+                    Mi Carrito
+                  </h2>
+                  {cart.length > 0 && (
+                    <button
+                      onClick={clearCart}
+                      className="text-sm text-red-600 hover:text-red-800 font-semibold px-3 py-1 rounded-lg hover:bg-red-50 transition-colors"
+                    >
+                      🗑️ Vaciar
+                    </button>
                   )}
                 </div>
+                
+                {cart.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🛒</div>
+                    <p className="text-gray-500 font-medium text-lg">Tu carrito está vacío</p>
+                    <p className="text-gray-400 text-sm mt-2">Agrega productos para comenzar</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Items del carrito */}
+                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                      {cart.map(item => {
+                        const product = products.find(p => p.id === item.productId);
+                        if (!product) return null;
+                        
+                        return (
+                          <div key={item.productId} className="bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-xl p-4 hover:border-amber-300 transition-all">
+                            <div className="flex items-start gap-3 mb-3">
+                              <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg overflow-hidden flex-shrink-0">
+                                {product.imagenUrl ? (
+                                  <img 
+                                    src={product.imagenUrl} 
+                                    alt={product.nombre}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-2xl">
+                                    ☕
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-bold text-gray-800 text-sm mb-1 truncate">{product.nombre}</h4>
+                                <p className="text-xs text-gray-600 mb-2">
+                                  ${item.precioUnitario.toLocaleString('es-CO')} c/u
+                                </p>
+                                <p className="text-sm font-bold text-amber-700">
+                                  ${item.subtotal.toLocaleString('es-CO')}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            {/* Controles de cantidad */}
+                            <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border-2 border-gray-200">
+                              <button
+                                onClick={() => updateCartQuantity(item.productId, item.cantidad - 1)}
+                                className="w-8 h-8 bg-red-100 text-red-700 rounded-lg flex items-center justify-center hover:bg-red-200 font-bold text-lg transition-colors"
+                              >
+                                −
+                              </button>
+                              <span className="text-lg font-bold text-gray-800 px-4">{item.cantidad}</span>
+                              <button
+                                onClick={() => updateCartQuantity(item.productId, item.cantidad + 1)}
+                                disabled={item.cantidad >= product.stock}
+                                className="w-8 h-8 bg-green-100 text-green-700 rounded-lg flex items-center justify-center hover:bg-green-200 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transition-colors"
+                              >
+                                +
+                              </button>
+                              <button
+                                onClick={() => removeFromCart(item.productId)}
+                                className="ml-2 text-red-600 hover:text-red-800 font-bold text-xl transition-colors"
+                                title="Eliminar"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Total y botón de compra */}
+                    <div className="border-t-4 border-amber-200 pt-4 space-y-4">
+                      <div className="flex justify-between items-center bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4">
+                        <span className="text-xl font-bold text-gray-800">Total:</span>
+                        <span className="text-3xl font-bold bg-gradient-to-r from-amber-700 to-orange-700 bg-clip-text text-transparent">
+                          ${getCartTotal().toLocaleString('es-CO')}
+                        </span>
+                      </div>
+                      
+                      <button
+                        onClick={handleCreateOrder}
+                        disabled={submitting}
+                        className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+                      >
+                        {submitting ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            Procesando...
+                          </span>
+                        ) : (
+                          '💳 Realizar Compra'
+                        )}
+                      </button>
+                      
+                      <p className="text-xs text-gray-500 text-center">
+                        ⚠️ Compra simulada sin procesamiento de pago
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-              );
-            })}
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Historial de Pedidos */}
+        <div className="mt-12 bg-white rounded-2xl shadow-xl p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <span className="text-3xl">📦</span>
+            Historial de Compras
+          </h2>
+          
+          {orders.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">📋</div>
+              <p className="text-gray-500 font-medium text-lg">No tienes compras aún</p>
+              <p className="text-gray-400 text-sm mt-2">Tus pedidos aparecerán aquí</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {orders.map(order => {
+                return (
+                  <div key={order.id} className="bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="font-bold text-xl text-gray-800 mb-1">Pedido #{order.id}</h3>
+                        <p className="text-sm text-gray-600">
+                          📅 {new Date(order.createdAt).toLocaleDateString('es-CO', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold text-amber-700 mb-2">
+                          ${order.total.toLocaleString('es-CO')}
+                        </p>
+                        <span className={`px-4 py-2 rounded-full text-sm font-bold ${
+                          order.status === 'completado' 
+                            ? 'bg-green-100 text-green-800'
+                            : order.status === 'pendiente'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {order.status === 'completado' ? '✓ Completado' : order.status}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 bg-white rounded-lg p-4 border border-gray-200">
+                      {order.products && typeof order.products === 'string' ? (
+                        (() => {
+                          try {
+                            const productsArray = JSON.parse(order.products);
+                            return productsArray.map((product: any, index: number) => (
+                              <div key={index} className="flex justify-between text-sm py-2 border-b border-gray-100 last:border-0">
+                                <span className="font-medium text-gray-700">{product.nombre} × {product.cantidad}</span>
+                                <span className="font-bold text-amber-700">${product.subtotal.toLocaleString('es-CO')}</span>
+                              </div>
+                            ));
+                          } catch (error) {
+                            return (
+                              <div className="text-sm text-gray-500">
+                                Error al cargar productos
+                              </div>
+                            );
+                          }
+                        })()
+                      ) : order.products && Array.isArray(order.products) ? (
+                        order.products.map((orderProduct: any, index: number) => {
+                          const product = orderProduct.producto || orderProduct;
+                          const cantidad = orderProduct.cantidad;
+                          const precio = product.precio || 0;
+                          const descuento = product.descuento || 0;
+                          const precioConDescuento = descuento ? precio * (1 - descuento / 100) : precio;
+                          const subtotal = cantidad * precioConDescuento;
+                          
+                          return (
+                            <div key={index} className="flex justify-between text-sm py-2 border-b border-gray-100 last:border-0">
+                              <span className="font-medium text-gray-700">{product.nombre} × {cantidad}</span>
+                              <span className="font-bold text-amber-700">${subtotal.toLocaleString('es-CO')}</span>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="text-sm text-gray-500">
+                          No hay productos disponibles
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

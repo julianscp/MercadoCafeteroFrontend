@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setShowTimeoutWarning(false);
     setTimeLeft(0);
     router.push("/auth/login");
-  }, [router]);
+  }, []);
 
   // Función para iniciar el timer de inactividad
   const startInactivityTimer = useCallback(() => {

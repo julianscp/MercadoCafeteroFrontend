@@ -181,6 +181,7 @@ export default function ShoppingCart() {
       return;
     }
 
+    // Validar stock antes de proceder
     for (const item of cart) {
       const product = products.find(p => p.id === item.productId);
       if (!product) {
@@ -197,36 +198,43 @@ export default function ShoppingCart() {
       setSubmitting(true);
       setError(null);
       
+      // Preparar datos para crear la preferencia de pago
       const orderProducts = cart.map(item => ({
         productId: item.productId,
         cantidad: item.cantidad
       }));
 
-      const orderData = {
-        products: orderProducts
+      const preferenceData = {
+        items: orderProducts
       };
 
-      const response = await api.post('/clientes/pedidos', orderData);
+      console.log('🛒 Creando preferencia de pago con Mercado Pago...');
       
+      // Llamar al endpoint de payments para crear la preferencia
+      const response = await api.post('/payments/create-preference', preferenceData);
+      
+      const { initPoint, sandboxInitPoint, orderId, preferenceId } = response.data;
+      
+      console.log('✅ Preferencia creada:', { orderId, preferenceId });
+      console.log('🔗 Redirigiendo a Mercado Pago...');
+      
+      // Limpiar el carrito antes de redirigir
       setCart([]);
+      localStorage.removeItem('cart');
       
-      const productIds = orderProducts.map(p => p.productId);
-      markProductsAsUpdated(productIds);
+      // Redirigir a Mercado Pago
+      // En desarrollo usa sandboxInitPoint, en producción usa initPoint
+      const paymentUrl = sandboxInitPoint || initPoint;
       
-      setTimeout(async () => {
-        await loadProducts();
-        console.log('Productos recargados después de compra');
-      }, 500);
-      
-      await loadOrders();
-      
-      setSuccess('🎉 ¡Compra realizada exitosamente!');
-      setTimeout(() => setSuccess(null), 5000);
-      
-      console.log('Respuesta del servidor:', response.data);
+      if (paymentUrl) {
+        window.location.href = paymentUrl;
+      } else {
+        setError('No se pudo obtener la URL de pago');
+      }
       
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Error realizando la compra');
+      console.error('❌ Error creando preferencia de pago:', err);
+      setError(err?.response?.data?.message || 'Error procesando el pago. Intenta nuevamente.');
     } finally {
       setSubmitting(false);
     }

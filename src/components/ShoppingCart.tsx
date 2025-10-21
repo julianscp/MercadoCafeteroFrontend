@@ -40,6 +40,13 @@ type CartItem = {
   subtotal: number;
 };
 
+type CreatePreferenceResponse = {
+  orderId: number;
+  preferenceId: string;
+  initPoint: string;
+  sandboxInitPoint: string;
+};
+
 export default function ShoppingCart() {
   const { user } = useAuth();
   const { updatedProducts, markProductsAsUpdated } = useProductRefresh();
@@ -211,7 +218,7 @@ export default function ShoppingCart() {
       console.log('🛒 Creando preferencia de pago con Mercado Pago...');
       
       // Llamar al endpoint de payments para crear la preferencia
-      const response = await api.post('/payments/create-preference', preferenceData);
+      const response = await api.post<CreatePreferenceResponse>('/payments/create-preference', preferenceData);
       
       const { initPoint, sandboxInitPoint, orderId, preferenceId } = response.data;
       

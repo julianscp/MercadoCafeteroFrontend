@@ -40,8 +40,6 @@ export default function CheckoutModal({
 }: CheckoutModalProps) {
   const [currentStep, setCurrentStep] = useState(1); // 1: Carrito, 2: Envío, 3: Pago, 4: Finalizado
   const [direccionEnvio, setDireccionEnvio] = useState(userDireccion || '');
-  const [orderId, setOrderId] = useState<number | null>(null);
-  const [orderDetails, setOrderDetails] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -143,22 +141,6 @@ export default function CheckoutModal({
       }>('/payments/create-preference', preferenceData);
       
       const { initPoint, orderId } = response.data;
-      
-      setOrderId(orderId);
-      setOrderDetails({
-        orderId,
-        products: cart.map(item => {
-          const product = getProductInfo(item.productId);
-          return {
-            nombre: product?.nombre || 'Producto',
-            cantidad: item.cantidad,
-            precioUnitario: item.precioUnitario,
-            subtotal: item.subtotal
-          };
-        }),
-        total: calculateTotal(),
-        direccionEnvio
-      });
       
       console.log('✅ Preferencia creada:', { orderId });
       console.log('🔗 Redirigiendo a Mercado Pago...');
@@ -393,7 +375,7 @@ export default function CheckoutModal({
 
       <div className="p-4 bg-yellow-50 border border-yellow-300 rounded-lg mb-6">
         <p className="text-sm text-yellow-800">
-          ⚠️ Al hacer clic en "Pagar con Mercado Pago", serás redirigido a la plataforma de pago segura de Mercado Pago.
+          ⚠️ Al hacer clic en &ldquo;Pagar con Mercado Pago&rdquo;, serás redirigido a la plataforma de pago segura de Mercado Pago.
         </p>
       </div>
 

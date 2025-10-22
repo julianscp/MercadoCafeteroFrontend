@@ -41,21 +41,13 @@ type CartItem = {
   subtotal: number;
 };
 
-type CreatePreferenceResponse = {
-  orderId: number;
-  preferenceId: string;
-  initPoint: string;
-  sandboxInitPoint: string;
-};
-
 export default function ShoppingCart() {
   const { user } = useAuth();
-  const { updatedProducts, markProductsAsUpdated } = useProductRefresh();
+  const { updatedProducts } = useProductRefresh();
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [selectedQuantities, setSelectedQuantities] = useState<{[key: number]: number}>({});
@@ -177,75 +169,6 @@ export default function ShoppingCart() {
 
   const getCartTotal = () => {
     return cart.reduce((total, item) => total + item.subtotal, 0);
-  };
-
-  const handleCreateOrder = async () => {
-    if (cart.length === 0) {
-      setError('El carrito está vacío');
-      return;
-    }
-
-    if (!user) {
-      setError('Debes iniciar sesión para realizar una compra');
-      return;
-    }
-
-    // Validar stock antes de proceder
-    for (const item of cart) {
-      const product = products.find(p => p.id === item.productId);
-      if (!product) {
-        setError(`Producto con ID ${item.productId} no encontrado`);
-        return;
-      }
-      if (item.cantidad > product.stock) {
-        setError(`No hay suficiente stock para "${product.nombre}". Disponible: ${product.stock}, Solicitado: ${item.cantidad}`);
-        return;
-      }
-    }
-
-    try {
-      setSubmitting(true);
-      setError(null);
-      
-      // Preparar datos para crear la preferencia de pago
-      const orderProducts = cart.map(item => ({
-        productId: item.productId,
-        cantidad: item.cantidad
-      }));
-
-      const preferenceData = {
-        items: orderProducts
-      };
-
-      console.log('🛒 Creando preferencia de pago con Mercado Pago...');
-      
-      // Llamar al endpoint de payments para crear la preferencia
-      const response = await api.post<CreatePreferenceResponse>('/payments/create-preference', preferenceData);
-      
-      const { initPoint, sandboxInitPoint, orderId, preferenceId } = response.data;
-      
-      console.log('✅ Preferencia creada:', { orderId, preferenceId });
-      console.log('🔗 Redirigiendo a Mercado Pago...');
-      
-      // Limpiar el carrito antes de redirigir
-      setCart([]);
-      localStorage.removeItem('cart');
-      
-      // Redirigir a Mercado Pago (siempre usa initPoint - las credenciales determinan si es sandbox o producción)
-      const paymentUrl = initPoint;
-      
-      if (paymentUrl) {
-        window.location.href = paymentUrl;
-      } else {
-        setError('No se pudo obtener la URL de pago');
-      }
-      
-    } catch (err: any) {
-      console.error('❌ Error creando preferencia de pago:', err);
-      setError(err?.response?.data?.message || 'Error procesando el pago. Intenta nuevamente.');
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   const clearCart = () => {

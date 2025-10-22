@@ -237,22 +237,30 @@ export default function AdminOrdersPage() {
                 <div className="mb-4">
                   <h4 className="font-bold text-gray-800 mb-3">📦 Productos:</h4>
                   <div className="space-y-2">
-                    {order.products.map((product, idx) => (
-                      <div 
-                        key={idx} 
-                        className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
-                      >
-                        <div>
-                          <span className="font-medium">{product.nombre}</span>
-                          <span className="text-gray-600 text-sm ml-2">
-                            x{product.cantidad}
+                    {Array.isArray(order.products) ? (
+                      order.products.map((product, idx) => (
+                        <div 
+                          key={idx} 
+                          className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                        >
+                          <div>
+                            <span className="font-medium">{product.nombre}</span>
+                            <span className="text-gray-600 text-sm ml-2">
+                              x{product.cantidad}
+                            </span>
+                          </div>
+                          <span className="font-bold text-blue-600">
+                            ${product.subtotal.toLocaleString()}
                           </span>
                         </div>
-                        <span className="font-bold text-blue-600">
-                          ${product.subtotal.toLocaleString()}
-                        </span>
+                      ))
+                    ) : (
+                      <div className="p-3 bg-yellow-50 border border-yellow-300 rounded-lg">
+                        <p className="text-sm text-yellow-800">
+                          ⚠️ Formato de productos no compatible. Pedido antiguo.
+                        </p>
                       </div>
-                    ))}
+                    )}
                   </div>
                   <div className="mt-4 pt-4 border-t flex justify-between items-center">
                     <span className="text-xl font-bold">Total:</span>

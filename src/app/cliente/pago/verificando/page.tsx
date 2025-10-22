@@ -40,7 +40,12 @@ function VerificandoPagoContent() {
       setAttempts(prev => prev + 1);
 
       const response = await api.get(`/payments/check/${orderId}`);
-      const data = response.data;
+      const data = response.data as { 
+        status: string; 
+        orderId?: number; 
+        message?: string; 
+        paymentId?: string;
+      };
 
       console.log('📊 Respuesta:', data);
 

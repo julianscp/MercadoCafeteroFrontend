@@ -9,6 +9,7 @@ function VerificandoPagoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
+  const paymentId = searchParams.get("payment_id"); // Mercado Pago envía esto en la URL
 
   const [status, setStatus] = useState<'checking' | 'success' | 'error' | 'pending'>('checking');
   const [message, setMessage] = useState('Verificando tu pago con Mercado Pago...');
@@ -23,7 +24,7 @@ function VerificandoPagoContent() {
     }
 
     checkPayment();
-  }, [orderId]);
+  }, [orderId, paymentId]);
 
   const checkPayment = async () => {
     if (attempts >= maxAttempts) {
@@ -39,7 +40,12 @@ function VerificandoPagoContent() {
       console.log(`🔍 Verificando pago (intento ${attempts + 1}/${maxAttempts})...`);
       setAttempts(prev => prev + 1);
 
-      const response = await api.get(`/payments/check/${orderId}`);
+      // Agregar paymentId si lo tenemos
+      const url = paymentId 
+        ? `/payments/check/${orderId}?paymentId=${paymentId}`
+        : `/payments/check/${orderId}`;
+
+      const response = await api.get(url);
       const data = response.data as { 
         status: string; 
         orderId?: number; 

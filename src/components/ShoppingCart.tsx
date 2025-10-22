@@ -229,9 +229,8 @@ export default function ShoppingCart() {
       setCart([]);
       localStorage.removeItem('cart');
       
-      // Redirigir a Mercado Pago
-      // En desarrollo usa sandboxInitPoint, en producción usa initPoint
-      const paymentUrl = sandboxInitPoint || initPoint;
+      // Redirigir a Mercado Pago (siempre usa initPoint - las credenciales determinan si es sandbox o producción)
+      const paymentUrl = initPoint;
       
       if (paymentUrl) {
         window.location.href = paymentUrl;

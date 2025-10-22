@@ -45,6 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
           <nav className="flex items-center gap-3 text-sm">
             <NavItem href="/admin/products" pathname={pathname}>Productos</NavItem>
+            <NavItem href="/admin/orders" pathname={pathname}>Pedidos</NavItem>
             <NavItem href="/admin/logs" pathname={pathname}>Logs</NavItem>
             <button
               onClick={logout}

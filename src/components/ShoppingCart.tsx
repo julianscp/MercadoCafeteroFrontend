@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { useProductRefresh } from '@/hooks/useProductRefresh';
+import CheckoutModal from './CheckoutModal';
 
 type Order = {
   id: number;
@@ -58,6 +59,7 @@ export default function ShoppingCart() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [selectedQuantities, setSelectedQuantities] = useState<{[key: number]: number}>({});
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
 
   useEffect(() => {
     loadProducts();
@@ -530,23 +532,12 @@ export default function ShoppingCart() {
                       </div>
                       
                       <button
-                        onClick={handleCreateOrder}
-                        disabled={submitting}
+                        onClick={() => setIsCheckoutModalOpen(true)}
+                        disabled={cart.length === 0}
                         className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
                       >
-                        {submitting ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                            Procesando...
-                          </span>
-                        ) : (
-                          '💳 Realizar Compra'
-                        )}
+                        🛒 Proceder al Checkout
                       </button>
-                      
-                      <p className="text-xs text-gray-500 text-center">
-                        ⚠️ Compra simulada sin procesamiento de pago
-                      </p>
                     </div>
                   </div>
                 )}
@@ -650,6 +641,20 @@ export default function ShoppingCart() {
           )}
         </div>
       </div>
+
+      {/* Modal de Checkout */}
+      <CheckoutModal 
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setIsCheckoutModalOpen(false)}
+        cart={cart}
+        products={products}
+        onUpdateCart={setCart}
+        onCartCleared={() => {
+          setCart([]);
+          localStorage.removeItem('cart');
+        }}
+        userDireccion={user?.direccion}
+      />
     </div>
   );
 }

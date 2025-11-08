@@ -9,8 +9,10 @@ type Complaint = {
   userId: number;
   orderId?: number;
   mensaje: string;
+  respuesta?: string;
   estado: string;
   createdAt: string;
+  respondedAt?: string;
   user: {
     id: number;
     nombre: string;
@@ -187,33 +189,76 @@ export default function ComplaintsManagement() {
       )}
 
       {/* Lista de Reclamos */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {complaints.length === 0 ? (
-          <div className="bg-white border rounded-lg p-8 text-center">
-            <p className="text-gray-500">No tienes reclamos registrados</p>
+          <div className="bg-white border-2 rounded-xl p-8 text-center shadow-md">
+            <p className="text-gray-500 text-lg">No tienes reclamos registrados</p>
           </div>
         ) : (
           complaints.map(complaint => (
-            <div key={complaint.id} className="bg-white border rounded-lg p-6">
-              <div className="flex justify-between items-start mb-3">
+            <div key={complaint.id} className="bg-white border-2 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="font-semibold text-gray-800">Reclamo #{complaint.id}</h3>
-                  <p className="text-sm text-gray-600">
-                    {new Date(complaint.createdAt).toLocaleDateString('es-CO')}
+                  <h3 className="text-xl font-bold text-gray-800">Reclamo #{complaint.id}</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    📅 {new Date(complaint.createdAt).toLocaleDateString('es-CO', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
                   </p>
                   {complaint.orderId && (
-                    <p className="text-sm text-blue-600">
-                      Relacionado con Pedido #{complaint.orderId}
+                    <p className="text-sm text-blue-600 mt-1">
+                      📦 Relacionado con Pedido #{complaint.orderId}
                     </p>
                   )}
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(complaint.estado)}`}>
+                <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(complaint.estado)}`}>
                   {complaint.estado}
                 </span>
               </div>
-              <div className="bg-gray-50 p-4 rounded">
-                <p className="text-gray-800">{complaint.mensaje}</p>
+
+              {/* Mensaje del cliente */}
+              <div className="bg-blue-50 p-4 rounded-lg mb-4 border border-blue-200">
+                <h4 className="font-semibold text-blue-900 mb-2">💬 Tu Mensaje:</h4>
+                <p className="text-gray-800 whitespace-pre-wrap">{complaint.mensaje}</p>
               </div>
+
+              {/* Respuesta del admin */}
+              {complaint.respuesta ? (
+                <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-green-900 flex items-center gap-2">
+                      <span>✅</span>
+                      <span>Respuesta del Administrador</span>
+                    </h4>
+                    {complaint.respondedAt && (
+                      <span className="text-xs text-green-700">
+                        {new Date(complaint.respondedAt).toLocaleDateString('es-CO', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-800 whitespace-pre-wrap">{complaint.respuesta}</p>
+                  <p className="text-xs text-green-700 mt-2">
+                    📧 Has recibido una notificación por correo electrónico con esta respuesta.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-300">
+                  <p className="text-yellow-800 text-sm flex items-center gap-2">
+                    <span>⏳</span>
+                    <span>Tu reclamo está siendo revisado. Recibirás una notificación por correo cuando el administrador responda.</span>
+                  </p>
+                </div>
+              )}
             </div>
           ))
         )}

@@ -403,7 +403,7 @@ export default function ProductsPage() {
         )}
 
         {/* Barra lateral vertical - oculta en móviles, visible en desktop */}
-        <aside className={`fixed lg:sticky lg:top-0 z-40 h-screen lg:h-[calc(100vh)] w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
+        <aside className={`fixed lg:sticky lg:top-0 z-40 h-screen lg:h-[calc(100vh)] w-fit flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
           menuMovilOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}>
           <div className="p-4">
@@ -421,7 +421,7 @@ export default function ProductsPage() {
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left rounded-lg px-4 py-3 font-medium transition-all duration-200 flex items-center gap-2 text-sm min-h-[44px] touch-manipulation ${
+                  className={`w-fit text-left rounded-lg px-4 py-3 font-medium transition-all duration-200 flex items-center gap-2 text-sm min-h-[44px] touch-manipulation whitespace-nowrap ${
                     activeSection === section.id
                       ? 'bg-amber-200/60 text-amber-900 shadow-md'
                       : 'bg-amber-50/60 text-amber-800 hover:bg-amber-200/40 hover:text-amber-900 hover:shadow-sm active:bg-amber-200/50'

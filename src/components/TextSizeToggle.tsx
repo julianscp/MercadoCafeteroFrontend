@@ -56,7 +56,7 @@ export default function TextSizeToggle() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[99999] text-size-toggle">
+    <div className="fixed bottom-4 left-4 z-[99999] text-size-toggle">
       {/* Botón principal */}
       <button
         data-text-size-button
@@ -89,7 +89,7 @@ export default function TextSizeToggle() {
       {isOpen && (
         <div 
           ref={panelRef}
-          className="absolute bottom-16 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-4 min-w-[200px]"
+          className="absolute bottom-16 left-0 bg-white rounded-lg shadow-xl border border-gray-200 p-4 min-w-[200px]"
           style={{ 
             zIndex: 99999,
             position: 'absolute'

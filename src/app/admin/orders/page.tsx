@@ -210,9 +210,9 @@ export default function AdminOrdersPage() {
                   <div className="self-start sm:self-auto">{getStatusBadge(order.status)}</div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                <div className="flex flex-col md:flex-row gap-4 sm:gap-6 mb-4 sm:mb-6">
                   {/* Información del cliente */}
-                  <div className="p-4 bg-blue-50 rounded-lg">
+                  <div className="p-4 bg-blue-50 rounded-lg md:flex-1">
                     <h4 className="font-bold text-blue-900 mb-2">👤 Cliente:</h4>
                     <p className="text-sm"><strong>Nombre:</strong> {order.user.nombre}</p>
                     <p className="text-sm"><strong>Email:</strong> {order.user.email}</p>
@@ -226,7 +226,7 @@ export default function AdminOrdersPage() {
 
                   {/* Dirección de envío */}
                   {order.direccionEnvio && (
-                    <div className="p-4 bg-green-50 rounded-lg">
+                    <div className="p-4 bg-green-50 rounded-lg md:flex-1">
                       <h4 className="font-bold text-green-900 mb-2">📍 Dirección de envío:</h4>
                       <p className="text-sm">{order.direccionEnvio}</p>
                     </div>

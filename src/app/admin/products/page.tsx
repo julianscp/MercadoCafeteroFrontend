@@ -126,19 +126,6 @@ export default function ProductsPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Asegurar que la barra lateral no esté fija al cargar la página
-  useEffect(() => {
-    const sidebar = document.getElementById('productos-sidebar');
-    if (sidebar) {
-      // Forzar estilos para asegurar que no esté fija
-      sidebar.style.position = 'static';
-      sidebar.style.top = 'auto';
-      sidebar.style.bottom = 'auto';
-      sidebar.style.left = 'auto';
-      sidebar.style.right = 'auto';
-      sidebar.style.transform = 'none';
-    }
-  }, []);
 
   // --------- Crear ----------
   async function onCrear(e: React.FormEvent) {
@@ -369,40 +356,37 @@ export default function ProductsPage() {
   const empty = !loading && !err && items.length === 0;
 
   return (
-    <div className="w-full">
-      <div className="flex w-full gap-8" style={{ position: 'static' }}>
-        {/* Barra lateral de navegación - Se desplaza con el scroll de la página */}
-        <aside 
-          id="productos-sidebar"
-          className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 rounded-2xl overflow-hidden" 
-          style={{ position: 'static', top: 'auto', bottom: 'auto', left: 'auto', right: 'auto' }}
-        >
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
-              <span>☕</span>
-              <span>Gestión de Productos</span>
-            </h2>
-            <nav className="space-y-2">
-              {SECTIONS.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
-                    activeSection === section.id
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
-                      : 'bg-gray-50 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
-                  }`}
-                >
-                  <span className="text-xl">{section.icon}</span>
-                  <span className="font-medium">{section.label}</span>
-                </button>
-              ))}
-            </nav>
-          </div>
-        </aside>
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex gap-8">
+          {/* Barra lateral de navegación */}
+          <aside className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 rounded-2xl overflow-hidden">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
+                <span>☕</span>
+                <span>Gestión de Productos</span>
+              </h2>
+              <nav className="space-y-2">
+                {SECTIONS.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => scrollToSection(section.id)}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+                      activeSection === section.id
+                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
+                        : 'bg-gray-50 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
+                    }`}
+                  >
+                    <span className="text-xl">{section.icon}</span>
+                    <span className="font-medium">{section.label}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </aside>
 
-        {/* Contenido principal */}
-        <div className="flex-1 w-full min-w-0">
+          {/* Contenido principal */}
+          <div className="flex-1 w-full min-w-0">
           {/* Sección: Lista de Productos */}
           <div 
             ref={(el) => { sectionRefs.current['productos'] = el; }}
@@ -1264,10 +1248,11 @@ export default function ProductsPage() {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
 
-      <style jsx global>{`
+      <style jsx>{`
         .input-modern {
           width: 100%;
           padding: 0.75rem 1rem;
@@ -1280,21 +1265,6 @@ export default function ProductsPage() {
           outline: none;
           border-color: #f59e0b;
           box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
-        }
-        /* Asegurar que la barra lateral no esté fija y se mueva con el scroll */
-        #productos-sidebar {
-          position: static !important;
-          top: auto !important;
-          bottom: auto !important;
-          left: auto !important;
-          right: auto !important;
-          transform: none !important;
-          will-change: auto !important;
-        }
-        /* Asegurar que el contenedor padre no tenga restricciones de scroll */
-        body, html {
-          overflow-x: hidden;
-          overflow-y: auto;
         }
       `}</style>
     </div>

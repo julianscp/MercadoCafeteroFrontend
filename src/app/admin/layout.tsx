@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import ProductsHeader from './products-header';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth();  // 👈 ahora también logout
@@ -36,6 +37,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
+  // Si está en la página de productos, usar el header especial con barra lateral
+  if (pathname === '/admin/products') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <ProductsHeader pathname={pathname} logout={logout} />
+        <main className="w-full">
+          {children}
+        </main>
+      </div>
+    );
+  }
+
+  // Para las demás páginas, usar el header normal
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       <header className="sticky top-0 z-50 w-full bg-amber-100/95 backdrop-blur-sm shadow-lg border-b border-amber-200/30">

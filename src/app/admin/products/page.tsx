@@ -86,11 +86,17 @@ export default function ProductsPage() {
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
-    const element = sectionRefs.current[sectionId];
+    // Notificar al header sobre el cambio de sección activa
+    if (typeof window !== 'undefined') {
+      const event = new CustomEvent('activeSectionChange', { detail: sectionId });
+      window.dispatchEvent(event);
+    }
+    
+    const element = document.getElementById(`section-${sectionId}`) || sectionRefs.current[sectionId];
     if (element) {
       // Obtener la posición del elemento relativa al documento
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - 100; // 100px de offset para el header
+      const offsetPosition = elementPosition + window.pageYOffset - 180; // Offset para el header extendido
       
       // Hacer scroll en la ventana completa
       window.scrollTo({
@@ -99,6 +105,19 @@ export default function ProductsPage() {
       });
     }
   };
+
+  // Escuchar eventos de scroll desde el header
+  useEffect(() => {
+    const handleScrollToSection = (e: CustomEvent) => {
+      const sectionId = e.detail;
+      scrollToSection(sectionId);
+    };
+
+    window.addEventListener('scrollToSection', handleScrollToSection as EventListener);
+    return () => {
+      window.removeEventListener('scrollToSection', handleScrollToSection as EventListener);
+    };
+  }, []);
 
   async function load() {
     try {
@@ -356,40 +375,39 @@ export default function ProductsPage() {
   const empty = !loading && !err && items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      <div className="max-w-7xl mx-auto">
-        {/* Contenedor principal con barra lateral integrada */}
-        <div className="flex items-start">
-          {/* Barra lateral de navegación - Se mueve con el scroll */}
-          <aside className="w-64 bg-white shadow-lg border-r-2 border-amber-200 flex-shrink-0 self-start">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
-                <span>☕</span>
-                <span>Gestión de Productos</span>
-              </h2>
-              <nav className="space-y-2">
-                {SECTIONS.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => scrollToSection(section.id)}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
-                      activeSection === section.id
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
-                        : 'bg-gray-50 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
-                    }`}
-                  >
-                    <span className="text-xl">{section.icon}</span>
-                    <span className="font-medium">{section.label}</span>
-                  </button>
-                ))}
-              </nav>
-            </div>
-          </aside>
-
-          {/* Contenido principal */}
-          <div className="flex-1 w-full min-w-0 p-8">
+    <>
+      {/* Barra lateral integrada justo debajo del header, se mueve con el scroll */}
+      <div className="max-w-7xl mx-auto flex -mt-px">
+        <aside className="w-64 bg-white shadow-lg border-r-2 border-amber-200 flex-shrink-0">
+          <div className="p-6">
+            <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
+              <span>☕</span>
+              <span>Gestión de Productos</span>
+            </h2>
+            <nav className="space-y-2">
+              {SECTIONS.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+                    activeSection === section.id
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
+                      : 'bg-gray-50 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
+                  }`}
+                >
+                  <span className="text-xl">{section.icon}</span>
+                  <span className="font-medium">{section.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+        </aside>
+        
+        {/* Contenido principal */}
+        <div className="flex-1 w-full min-w-0 p-8">
           {/* Sección: Lista de Productos */}
           <div 
+            id="section-productos"
             ref={(el) => { sectionRefs.current['productos'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
@@ -529,6 +547,7 @@ export default function ProductsPage() {
 
           {/* Sección: Crear Producto */}
           <div 
+            id="section-crear"
             ref={(el) => { sectionRefs.current['crear'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
@@ -663,6 +682,7 @@ export default function ProductsPage() {
 
           {/* Sección: Ajuste de Stock */}
           <div 
+            id="section-ajuste"
             ref={(el) => { sectionRefs.current['ajuste'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
@@ -750,6 +770,7 @@ export default function ProductsPage() {
 
           {/* Sección: Productos Críticos */}
           <div 
+            id="section-criticos"
             ref={(el) => { sectionRefs.current['criticos'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-red-200"
           >
@@ -827,6 +848,7 @@ export default function ProductsPage() {
 
           {/* Sección: Movimientos de Stock */}
           <div 
+            id="section-movimientos"
             ref={(el) => { sectionRefs.current['movimientos'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
@@ -1252,7 +1274,7 @@ export default function ProductsPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

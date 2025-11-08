@@ -126,6 +126,20 @@ export default function ProductsPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Asegurar que la barra lateral no esté fija al cargar la página
+  useEffect(() => {
+    const sidebar = document.getElementById('productos-sidebar');
+    if (sidebar) {
+      // Forzar estilos para asegurar que no esté fija
+      sidebar.style.position = 'static';
+      sidebar.style.top = 'auto';
+      sidebar.style.bottom = 'auto';
+      sidebar.style.left = 'auto';
+      sidebar.style.right = 'auto';
+      sidebar.style.transform = 'none';
+    }
+  }, []);
+
   // --------- Crear ----------
   async function onCrear(e: React.FormEvent) {
     e.preventDefault();
@@ -1267,7 +1281,7 @@ export default function ProductsPage() {
           border-color: #f59e0b;
           box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
         }
-        /* Asegurar que la barra lateral no esté fija */
+        /* Asegurar que la barra lateral no esté fija y se mueva con el scroll */
         #productos-sidebar {
           position: static !important;
           top: auto !important;
@@ -1275,6 +1289,12 @@ export default function ProductsPage() {
           left: auto !important;
           right: auto !important;
           transform: none !important;
+          will-change: auto !important;
+        }
+        /* Asegurar que el contenedor padre no tenga restricciones de scroll */
+        body, html {
+          overflow-x: hidden;
+          overflow-y: auto;
         }
       `}</style>
     </div>

@@ -541,7 +541,7 @@ export default function ProductsPage() {
               <form onSubmit={onCrear} className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Field label="Nombre">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={nuevo.nombre}
                     onChange={(e) => setNuevo({ ...nuevo, nombre: e.target.value })}
                     required
@@ -549,7 +549,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Marca">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={nuevo.marca}
                     onChange={(e) => setNuevo({ ...nuevo, marca: e.target.value })}
                   />
@@ -557,7 +557,7 @@ export default function ProductsPage() {
 
                 <Field label="Categoría">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={nuevo.categoria}
                     onChange={(e) => setNuevo({ ...nuevo, categoria: e.target.value })}
                     required
@@ -565,7 +565,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Subcategoría">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={nuevo.subcategoria}
                     onChange={(e) => setNuevo({ ...nuevo, subcategoria: e.target.value })}
                   />
@@ -573,7 +573,7 @@ export default function ProductsPage() {
 
                 <Field label="Precio (COP)">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     min={0}
                     step="1"
@@ -584,7 +584,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Stock">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     min={0}
                     step="1"
@@ -596,7 +596,7 @@ export default function ProductsPage() {
 
                 <Field label="Stock mínimo">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     min={0}
                     step="1"
@@ -606,7 +606,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Estado">
                   <select
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={nuevo.estado}
                     onChange={(e) => setNuevo({ ...nuevo, estado: e.target.value as Estado })}
                   >
@@ -618,7 +618,7 @@ export default function ProductsPage() {
 
                 <Field label="Descripción" className="md:col-span-2">
                   <textarea
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     rows={3}
                     value={nuevo.descripcion}
                     onChange={(e) => setNuevo({ ...nuevo, descripcion: e.target.value })}
@@ -675,7 +675,7 @@ export default function ProductsPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Field label="Producto">
                   <select
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={ajusteId}
                     onChange={(e) => setAjusteId(e.target.value ? Number(e.target.value) : '')}
                     required
@@ -691,7 +691,7 @@ export default function ProductsPage() {
 
                 <Field label="Cantidad (usa + para entrada, - para salida)">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     step={1}
                     value={ajusteCantidad}
@@ -982,7 +982,7 @@ export default function ProductsPage() {
               <form onSubmit={onGuardarEdit} className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Field label="Nombre">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={editData.nombre}
                     onChange={(e) => setEditData({ ...editData, nombre: e.target.value })}
                     required
@@ -990,7 +990,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Marca">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={editData.marca}
                     onChange={(e) => setEditData({ ...editData, marca: e.target.value })}
                   />
@@ -998,7 +998,7 @@ export default function ProductsPage() {
 
                 <Field label="Categoría">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={editData.categoria}
                     onChange={(e) => setEditData({ ...editData, categoria: e.target.value })}
                     required
@@ -1006,7 +1006,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Subcategoría">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={editData.subcategoria}
                     onChange={(e) => setEditData({ ...editData, subcategoria: e.target.value })}
                   />
@@ -1014,7 +1014,7 @@ export default function ProductsPage() {
 
                 <Field label="Precio (COP)">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     min={0}
                     step={1}
@@ -1025,7 +1025,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Stock">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     min={0}
                     step={1}
@@ -1037,7 +1037,7 @@ export default function ProductsPage() {
 
                 <Field label="Stock mínimo">
                   <input
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     type="number"
                     min={0}
                     step={1}
@@ -1049,7 +1049,7 @@ export default function ProductsPage() {
                 </Field>
                 <Field label="Estado">
                   <select
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     value={editData.estado}
                     onChange={(e) => setEditData({ ...editData, estado: e.target.value as Estado })}
                   >
@@ -1061,7 +1061,7 @@ export default function ProductsPage() {
 
                 <Field label="Descripción" className="md:col-span-2">
                   <textarea
-                    className="input-modern"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                     rows={3}
                     value={editData.descripcion}
                     onChange={(e) => setEditData({ ...editData, descripcion: e.target.value })}
@@ -1252,23 +1252,6 @@ export default function ProductsPage() {
           </div>
         </div>
       </div>
-    </div>
-
-      <style jsx>{`
-        .input-modern {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border: 2px solid #e5e7eb;
-          border-radius: 0.5rem;
-          font-size: 1rem;
-          transition: all 0.2s;
-        }
-        .input-modern:focus {
-          outline: none;
-          border-color: #f59e0b;
-          box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
-        }
-      `}</style>
     </div>
   );
 }

@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 w-full">
+    <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 w-full" style={{ minHeight: '100vh' }}>
       <header className="sticky top-0 z-50 w-full bg-amber-100/95 backdrop-blur-sm shadow-lg border-b border-amber-200/30">
         <div className="mx-auto flex w-full items-center justify-between p-4 px-6">
           <Link href="/" className="font-bold text-amber-800 text-lg hover:text-amber-700 transition-colors">
@@ -58,7 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
         </div>
       </header>
-      <main className="w-full py-8 px-8">
+      <main className="w-full py-8 px-8" style={{ position: 'relative' }}>
         {children}
       </main>
     </div>

@@ -356,9 +356,13 @@ export default function ProductsPage() {
 
   return (
     <div className="w-full">
-      <div className="flex w-full gap-8 items-start">
+      <div className="flex w-full gap-8" style={{ position: 'static' }}>
         {/* Barra lateral de navegación - Se desplaza con el scroll de la página */}
-        <aside className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 rounded-2xl overflow-hidden">
+        <aside 
+          id="productos-sidebar"
+          className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 rounded-2xl overflow-hidden" 
+          style={{ position: 'static', top: 'auto', bottom: 'auto', left: 'auto', right: 'auto' }}
+        >
           <div className="p-6">
             <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
               <span>☕</span>
@@ -1249,7 +1253,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         .input-modern {
           width: 100%;
           padding: 0.75rem 1rem;
@@ -1262,6 +1266,15 @@ export default function ProductsPage() {
           outline: none;
           border-color: #f59e0b;
           box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        /* Asegurar que la barra lateral no esté fija */
+        #productos-sidebar {
+          position: static !important;
+          top: auto !important;
+          bottom: auto !important;
+          left: auto !important;
+          right: auto !important;
+          transform: none !important;
         }
       `}</style>
     </div>

@@ -375,36 +375,37 @@ export default function ProductsPage() {
   const empty = !loading && !err && items.length === 0;
 
   return (
-    <>
-      {/* Barra lateral integrada justo debajo del header, se mueve con el scroll */}
-      <div className="max-w-7xl mx-auto flex -mt-px">
-        <aside className="w-64 bg-white shadow-lg border-r-2 border-amber-200 flex-shrink-0">
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+      {/* Pestaña pequeña de Gestión de Productos debajo del header */}
+      <div className="bg-white border-b-2 border-amber-200 shadow-md">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-6">
+            <h2 className="text-xl font-bold text-amber-800 flex items-center gap-2">
               <span>☕</span>
               <span>Gestión de Productos</span>
             </h2>
-            <nav className="space-y-2">
+            <nav className="flex items-center gap-2">
               {SECTIONS.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
+                  className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium ${
                     activeSection === section.id
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
                       : 'bg-gray-50 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
                   }`}
                 >
-                  <span className="text-xl">{section.icon}</span>
-                  <span className="font-medium">{section.label}</span>
+                  <span>{section.icon}</span>
+                  <span>{section.label}</span>
                 </button>
               ))}
             </nav>
           </div>
-        </aside>
-        
-        {/* Contenido principal */}
-        <div className="flex-1 w-full min-w-0 p-8">
+        </div>
+      </div>
+
+      {/* Contenido principal */}
+      <div className="max-w-7xl mx-auto p-8">
           {/* Sección: Lista de Productos */}
           <div 
             id="section-productos"
@@ -1271,9 +1272,8 @@ export default function ProductsPage() {
               </div>
             </div>
           )}
-          </div>
-        </div>
-    </>
+      </div>
+    </div>
   );
 }
 

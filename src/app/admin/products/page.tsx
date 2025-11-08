@@ -74,6 +74,9 @@ export default function ProductsPage() {
   const [detalleProducto, setDetalleProducto] = useState<any | null>(null);
   const [mostrarDetalle, setMostrarDetalle] = useState(false);
 
+  // Menú móvil
+  const [menuMovilOpen, setMenuMovilOpen] = useState(false);
+
   // --------- Utilidades ----------
   function currencyCOP(n: any) {
     const val = Number(n ?? 0);
@@ -86,6 +89,7 @@ export default function ProductsPage() {
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
+    setMenuMovilOpen(false); // Cerrar menú móvil al hacer click
     // Notificar al header sobre el cambio de sección activa
     if (typeof window !== 'undefined') {
       const event = new CustomEvent('activeSectionChange', { detail: sectionId });
@@ -96,11 +100,14 @@ export default function ProductsPage() {
     if (element) {
       // Obtener la posición del elemento relativa al documento
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - 180; // Offset para el header extendido
+      // Offset responsive: menor en móviles (header más pequeño), mayor en desktop
+      const isMobile = window.innerWidth < 1024;
+      const offset = isMobile ? 140 : 180;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
       
       // Hacer scroll en la ventana completa
       window.scrollTo({
-        top: offsetPosition,
+        top: Math.max(0, offsetPosition),
         behavior: 'smooth'
       });
     }
@@ -376,26 +383,47 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      <div className="max-w-7xl mx-auto flex">
-        {/* Barra lateral vertical clonada del banner amarillo */}
-        <aside className="sticky top-[73px] z-40 h-fit w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row">
+        {/* Botón menú móvil - solo visible en móviles */}
+        <button
+          onClick={() => setMenuMovilOpen(!menuMovilOpen)}
+          className="lg:hidden fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-14 h-14 bg-amber-500 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl hover:bg-amber-600 active:bg-amber-700 transition-all touch-manipulation"
+          aria-label="Menú de navegación"
+          aria-expanded={menuMovilOpen}
+        >
+          {menuMovilOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Overlay para móviles */}
+        {menuMovilOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setMenuMovilOpen(false)}
+          />
+        )}
+
+        {/* Barra lateral vertical - oculta en móviles, visible en desktop */}
+        <aside className={`fixed lg:sticky top-0 lg:top-[73px] z-40 h-screen lg:h-fit w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
+          menuMovilOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}>
           <div className="p-4">
-            <div className="font-bold text-amber-800 text-lg mb-6 flex items-center gap-2">
+            <div className="font-bold text-amber-800 text-base sm:text-lg mb-6 flex items-center gap-2">
               <span>☕</span>
-              <span>Gestión de Productos</span>
+              <span className="hidden sm:inline">Gestión de Productos</span>
+              <span className="sm:hidden">Menú</span>
             </div>
             <nav className="flex flex-col gap-2">
               {SECTIONS.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left rounded-lg px-4 py-2 font-medium transition-all duration-200 flex items-center gap-2 text-sm ${
+                  className={`w-full text-left rounded-lg px-4 py-3 font-medium transition-all duration-200 flex items-center gap-2 text-sm min-h-[44px] touch-manipulation ${
                     activeSection === section.id
                       ? 'bg-amber-200/60 text-amber-900 shadow-md'
-                      : 'bg-amber-50/60 text-amber-800 hover:bg-amber-200/40 hover:text-amber-900 hover:shadow-sm'
+                      : 'bg-amber-50/60 text-amber-800 hover:bg-amber-200/40 hover:text-amber-900 hover:shadow-sm active:bg-amber-200/50'
                   }`}
                 >
-                  <span>{section.icon}</span>
+                  <span className="text-lg">{section.icon}</span>
                   <span>{section.label}</span>
                 </button>
               ))}
@@ -404,15 +432,15 @@ export default function ProductsPage() {
         </aside>
 
         {/* Contenido principal */}
-        <div className="flex-1 w-full min-w-0 p-8">
+        <div className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8">
           {/* Sección: Lista de Productos */}
           <div 
             id="section-productos"
             ref={(el) => { sectionRefs.current['productos'] = el; }}
-            className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
+            className="mb-12 bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-amber-100"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
                 <span>📦</span>
                 <span>Lista de Productos</span>
               </h2>
@@ -423,7 +451,7 @@ export default function ProductsPage() {
                     setTimeout(() => scrollToSection('crear'), 100);
                   }
                 }}
-                className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 font-bold shadow-lg hover:shadow-xl transition-all"
+                className="px-4 py-3 sm:px-6 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 font-bold shadow-lg hover:shadow-xl transition-all text-sm sm:text-base min-h-[44px]"
               >
                 {createOpen ? 'Cerrar' : '+ Nuevo Producto'}
               </button>
@@ -448,7 +476,7 @@ export default function ProductsPage() {
             )}
 
             {!loading && !err && !empty && (
-              <div className="overflow-x-auto rounded-lg border-2 border-gray-200">
+              <div className="overflow-x-auto rounded-lg border-2 border-gray-200 -mx-4 sm:mx-0">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gradient-to-r from-amber-100 to-orange-100">
                     <tr>
@@ -516,22 +544,22 @@ export default function ProductsPage() {
                         </Td>
 
                         <td className="p-3 text-right">
-                          <div className="inline-flex items-center gap-2">
+                          <div className="inline-flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                             <button
                               onClick={() => abrirDetalles(p)}
-                              className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-medium text-sm transition-colors"
+                              className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-medium text-sm transition-colors min-h-[44px] flex-1 sm:flex-none"
                             >
                               Detalles
                             </button>
                             <button
                               onClick={() => abrirEditar(p)}
-                              className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm transition-colors"
+                              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium text-sm transition-colors min-h-[44px] flex-1 sm:flex-none"
                             >
                               Editar
                             </button>
                             <button
                               onClick={() => onEliminar(p.id)}
-                              className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 font-medium text-sm transition-colors"
+                              className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 font-medium text-sm transition-colors min-h-[44px] flex-1 sm:flex-none"
                             >
                               Eliminar
                             </button>
@@ -549,9 +577,9 @@ export default function ProductsPage() {
           <div 
             id="section-crear"
             ref={(el) => { sectionRefs.current['crear'] = el; }}
-            className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
+            className="mb-12 bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-amber-100"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
               <span>➕</span>
               <span>Crear Producto</span>
             </h2>
@@ -684,9 +712,9 @@ export default function ProductsPage() {
           <div 
             id="section-ajuste"
             ref={(el) => { sectionRefs.current['ajuste'] = el; }}
-            className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
+            className="mb-12 bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-amber-100"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
               <span>📊</span>
               <span>Ajuste de Stock</span>
             </h2>
@@ -772,16 +800,16 @@ export default function ProductsPage() {
           <div 
             id="section-criticos"
             ref={(el) => { sectionRefs.current['criticos'] = el; }}
-            className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-red-200"
+            className="mb-12 bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-red-200"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
                 <span>⚠️</span>
                 <span>Productos en Estado Crítico</span>
               </h2>
               <button
                 onClick={cargarCriticos}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors"
+                className="px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium transition-colors min-h-[44px]"
               >
                 {loadingCriticos ? 'Cargando…' : '🔄 Refrescar'}
               </button>
@@ -802,7 +830,7 @@ export default function ProductsPage() {
                 <p className="text-green-700 text-lg">✅ No hay productos críticos</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-lg border-2 border-red-200">
+              <div className="overflow-x-auto rounded-lg border-2 border-red-200 -mx-4 sm:mx-0">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gradient-to-r from-red-100 to-orange-100">
                     <tr>
@@ -850,9 +878,9 @@ export default function ProductsPage() {
           <div 
             id="section-movimientos"
             ref={(el) => { sectionRefs.current['movimientos'] = el; }}
-            className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
+            className="mb-12 bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-amber-100"
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
               <span>📋</span>
               <span>Movimientos de Stock</span>
             </h2>
@@ -860,7 +888,7 @@ export default function ProductsPage() {
             <form onSubmit={buscarLogsPorRango} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <Field label="Fecha inicio">
                 <input
-                  className="input-modern"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 min-h-[44px]"
                   type="date"
                   value={logFilter.inicio}
                   onChange={(e) => setLogFilter((f) => ({ ...f, inicio: e.target.value }))}
@@ -870,7 +898,7 @@ export default function ProductsPage() {
 
               <Field label="Fecha fin">
                 <input
-                  className="input-modern"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 min-h-[44px]"
                   type="date"
                   value={logFilter.fin}
                   onChange={(e) => setLogFilter((f) => ({ ...f, fin: e.target.value }))}
@@ -880,7 +908,7 @@ export default function ProductsPage() {
 
               <Field label="Producto (opcional)">
                 <select
-                  className="input-modern"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 min-h-[44px]"
                   value={logFilter.productoId}
                   onChange={(e) =>
                     setLogFilter((f) => ({ ...f, productoId: e.target.value ? Number(e.target.value) : '' }))
@@ -898,7 +926,7 @@ export default function ProductsPage() {
               <div className="flex items-end">
                 <button 
                   type="submit" 
-                  className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 font-bold shadow-lg hover:shadow-xl transition-all"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 font-bold shadow-lg hover:shadow-xl transition-all min-h-[44px]"
                 >
                   {loadingLogs ? 'Buscando…' : '🔍 Buscar'}
                 </button>
@@ -920,7 +948,7 @@ export default function ProductsPage() {
                 <p className="text-gray-500 text-lg">No hay movimientos para el criterio seleccionado.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-lg border-2 border-gray-200">
+              <div className="overflow-x-auto rounded-lg border-2 border-gray-200 -mx-4 sm:mx-0">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gradient-to-r from-gray-100 to-gray-200">
                     <tr>
@@ -984,9 +1012,9 @@ export default function ProductsPage() {
 
           {/* Editar (panel simple) */}
           {editId && editData && (
-            <div ref={editFormRef} className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-200">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <div ref={editFormRef} className="mb-12 bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-blue-200">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-3">
                   <span>✏️</span>
                   <span>Editar Producto</span>
                 </h2>
@@ -995,7 +1023,7 @@ export default function ProductsPage() {
                     setEditId(null);
                     setEditData(null);
                   }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition-colors"
+                  className="px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition-colors min-h-[44px]"
                 >
                   ✕ Cerrar
                 </button>
@@ -1160,20 +1188,21 @@ export default function ProductsPage() {
 
           {/* Modal de Detalles */}
           {mostrarDetalle && detalleProducto && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-              <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
-                <div className="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
-                  <h2 className="text-2xl font-bold">Detalles del Producto</h2>
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-2 sm:p-4">
+              <div className="relative w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
+                <div className="sticky top-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between rounded-t-2xl">
+                  <h2 className="text-xl sm:text-2xl font-bold">Detalles del Producto</h2>
                   <button
                     onClick={() => setMostrarDetalle(false)}
-                    className="text-white hover:text-gray-200 text-3xl font-bold transition-colors"
+                    className="text-white hover:text-gray-200 text-2xl sm:text-3xl font-bold transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    aria-label="Cerrar"
                   >
                     ×
                   </button>
                 </div>
 
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 sm:p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-4">
                       <div className="aspect-square overflow-hidden rounded-lg bg-gray-100 shadow-lg">
                         {detalleProducto.imagenUrl ? (
@@ -1200,34 +1229,34 @@ export default function ProductsPage() {
 
                     <div className="space-y-4">
                       <div>
-                        <h3 className="text-3xl font-bold text-gray-900 mb-2">
+                        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                           {detalleProducto.nombre}
                         </h3>
                         {detalleProducto.marca && (
-                          <p className="text-lg text-gray-600">{detalleProducto.marca}</p>
+                          <p className="text-base sm:text-lg text-gray-600">{detalleProducto.marca}</p>
                         )}
                       </div>
 
                       <div className="space-y-3">
                         <div className="flex justify-between items-center py-3 border-b-2 border-gray-200">
-                          <span className="text-gray-600 font-medium">Precio:</span>
-                          <span className="text-2xl font-bold text-amber-700">
+                          <span className="text-gray-600 font-medium text-sm sm:text-base">Precio:</span>
+                          <span className="text-xl sm:text-2xl font-bold text-amber-700">
                             {currencyCOP(detalleProducto.precio)}
                           </span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 py-3 border-b-2 border-gray-200">
                           <div>
-                            <span className="text-gray-600 font-medium">Stock:</span>
-                            <p className="text-xl font-semibold">
+                            <span className="text-gray-600 font-medium text-sm sm:text-base">Stock:</span>
+                            <p className="text-lg sm:text-xl font-semibold">
                               <span className={Number(detalleProducto.stock) <= Number(detalleProducto.stockMinimo ?? 0) ? 'text-red-600' : 'text-green-600'}>
                                 {detalleProducto.stock}
                               </span>
                             </p>
                           </div>
                           <div>
-                            <span className="text-gray-600 font-medium">Stock Mínimo:</span>
-                            <p className="text-xl font-semibold">{detalleProducto.stockMinimo ?? 0}</p>
+                            <span className="text-gray-600 font-medium text-sm sm:text-base">Stock Mínimo:</span>
+                            <p className="text-lg sm:text-xl font-semibold">{detalleProducto.stockMinimo ?? 0}</p>
                           </div>
                         </div>
 
@@ -1245,13 +1274,13 @@ export default function ProductsPage() {
                         </div>
                       </div>
 
-                      <div className="flex gap-3 pt-4">
+                      <div className="flex flex-col sm:flex-row gap-3 pt-4">
                         <button
                           onClick={() => {
                             setMostrarDetalle(false);
                             abrirEditar(detalleProducto);
                           }}
-                          className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-bold shadow-lg hover:shadow-xl transition-all"
+                          className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-bold shadow-lg hover:shadow-xl transition-all min-h-[44px] text-sm sm:text-base"
                         >
                           ✏️ Editar Producto
                         </button>
@@ -1260,7 +1289,7 @@ export default function ProductsPage() {
                             setMostrarDetalle(false);
                             onEliminar(detalleProducto.id);
                           }}
-                          className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 font-bold shadow-lg hover:shadow-xl transition-all"
+                          className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 font-bold shadow-lg hover:shadow-xl transition-all min-h-[44px] text-sm sm:text-base"
                         >
                           🗑️ Eliminar
                         </button>

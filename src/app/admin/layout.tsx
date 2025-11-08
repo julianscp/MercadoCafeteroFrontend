@@ -58,7 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
         </div>
       </header>
-      <main className="w-full min-h-[calc(100vh-80px)] py-8 px-8">
+      <main className="w-full py-8 px-8">
         {children}
       </main>
     </div>

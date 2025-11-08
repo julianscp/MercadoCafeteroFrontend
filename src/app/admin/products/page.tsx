@@ -88,7 +88,15 @@ export default function ProductsPage() {
     setActiveSection(sectionId);
     const element = sectionRefs.current[sectionId];
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Obtener la posición del elemento relativa al documento
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - 100; // 100px de offset para el header
+      
+      // Hacer scroll en la ventana completa
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -348,9 +356,9 @@ export default function ProductsPage() {
 
   return (
     <div className="w-full">
-      <div className="flex w-full gap-8">
+      <div className="flex w-full gap-8 items-start">
         {/* Barra lateral de navegación - Se desplaza con el scroll de la página */}
-        <aside className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 self-start rounded-2xl overflow-hidden">
+        <aside className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 rounded-2xl overflow-hidden">
           <div className="p-6">
             <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
               <span>☕</span>
@@ -376,7 +384,7 @@ export default function ProductsPage() {
         </aside>
 
         {/* Contenido principal */}
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full min-w-0">
           {/* Sección: Lista de Productos */}
           <div 
             ref={(el) => { sectionRefs.current['productos'] = el; }}

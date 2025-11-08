@@ -403,7 +403,7 @@ export default function ProductsPage() {
         )}
 
         {/* Barra lateral vertical - oculta en móviles, visible en desktop */}
-        <aside className={`fixed lg:sticky lg:top-0 z-40 h-screen lg:h-[calc(100vh)] w-fit flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
+        <aside className={`fixed lg:sticky lg:top-0 z-40 h-screen lg:h-fit w-fit flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
           menuMovilOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}>
           <div className="p-4">

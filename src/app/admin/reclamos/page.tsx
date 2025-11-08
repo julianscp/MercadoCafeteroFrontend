@@ -119,17 +119,17 @@ export default function AdminReclamosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-800 to-orange-800 bg-clip-text text-transparent">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-amber-800 to-orange-800 bg-clip-text text-transparent">
             📋 Gestión de Reclamos
           </h1>
           
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilterStatus('todos')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition min-h-[44px] text-sm sm:text-base ${
                 filterStatus === 'todos'
                   ? 'bg-blue-500 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -139,7 +139,7 @@ export default function AdminReclamosPage() {
             </button>
             <button
               onClick={() => setFilterStatus('pendiente')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition min-h-[44px] text-sm sm:text-base ${
                 filterStatus === 'pendiente'
                   ? 'bg-yellow-500 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -149,7 +149,7 @@ export default function AdminReclamosPage() {
             </button>
             <button
               onClick={() => setFilterStatus('resuelto')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition min-h-[44px] text-sm sm:text-base ${
                 filterStatus === 'resuelto'
                   ? 'bg-green-500 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -179,13 +179,13 @@ export default function AdminReclamosPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {complaints.map(complaint => (
-              <div key={complaint.id} className="bg-white rounded-2xl shadow-xl p-6 border-2 border-gray-200 hover:shadow-2xl transition-shadow">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-800">Reclamo #{complaint.id}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
+              <div key={complaint.id} className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-gray-200 hover:shadow-2xl transition-shadow">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800">Reclamo #{complaint.id}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">
                       📅 {new Date(complaint.createdAt).toLocaleDateString('es-CO', {
                         year: 'numeric',
                         month: 'long',
@@ -195,12 +195,12 @@ export default function AdminReclamosPage() {
                       })}
                     </p>
                     {complaint.orderId && (
-                      <p className="text-sm text-blue-600 mt-1">
+                      <p className="text-xs sm:text-sm text-blue-600 mt-1">
                         📦 Relacionado con Pedido #{complaint.orderId}
                       </p>
                     )}
                   </div>
-                  <span className={`px-4 py-2 rounded-full text-sm font-semibold border-2 ${getStatusColor(complaint.estado)}`}>
+                  <span className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border-2 self-start sm:self-auto ${getStatusColor(complaint.estado)}`}>
                     {complaint.estado}
                   </span>
                 </div>
@@ -241,7 +241,7 @@ export default function AdminReclamosPage() {
                 {complaint.estado === 'pendiente' && (
                   <button
                     onClick={() => handleOpenResponseModal(complaint)}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 font-bold shadow-lg hover:shadow-xl transition-all"
+                    className="w-full px-4 sm:px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 font-bold shadow-lg hover:shadow-xl transition-all min-h-[44px] text-sm sm:text-base"
                   >
                     💬 Responder Reclamo
                   </button>
@@ -250,7 +250,7 @@ export default function AdminReclamosPage() {
                 {complaint.estado === 'resuelto' && !complaint.respuesta && (
                   <button
                     onClick={() => handleOpenResponseModal(complaint)}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-bold shadow-lg hover:shadow-xl transition-all"
+                    className="w-full px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-bold shadow-lg hover:shadow-xl transition-all min-h-[44px] text-sm sm:text-base"
                   >
                     ✏️ Editar Respuesta
                   </button>
@@ -263,17 +263,18 @@ export default function AdminReclamosPage() {
 
       {/* Modal de respuesta */}
       {showResponseModal && selectedComplaint && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">💬 Responder Reclamo #{selectedComplaint.id}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">💬 Responder Reclamo #{selectedComplaint.id}</h2>
               <button
                 onClick={() => {
                   setShowResponseModal(false);
                   setSelectedComplaint(null);
                   setResponse('');
                 }}
-                className="text-gray-500 hover:text-gray-700 text-3xl font-bold transition-colors"
+                className="text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl font-bold transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                aria-label="Cerrar"
               >
                 ×
               </button>
@@ -301,7 +302,7 @@ export default function AdminReclamosPage() {
               </p>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 onClick={() => {
                   setShowResponseModal(false);
@@ -309,14 +310,14 @@ export default function AdminReclamosPage() {
                   setResponse('');
                 }}
                 disabled={submitting}
-                className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-bold disabled:opacity-50 transition-colors"
+                className="flex-1 px-4 sm:px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-bold disabled:opacity-50 transition-colors min-h-[44px] text-sm sm:text-base"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSubmitResponse}
                 disabled={submitting || !response.trim()}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 font-bold disabled:opacity-50 shadow-lg hover:shadow-xl transition-all"
+                className="flex-1 px-4 sm:px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 font-bold disabled:opacity-50 shadow-lg hover:shadow-xl transition-all min-h-[44px] text-sm sm:text-base"
               >
                 {submitting ? 'Enviando...' : '📧 Enviar Respuesta'}
               </button>

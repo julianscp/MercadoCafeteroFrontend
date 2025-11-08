@@ -147,15 +147,15 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold text-gray-800">📦 Gestión de Pedidos</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">📦 Gestión de Pedidos</h1>
           
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilterStatus('pendientes')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition min-h-[44px] text-sm sm:text-base ${
                 filterStatus === 'pendientes'
                   ? 'bg-blue-500 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -165,7 +165,7 @@ export default function AdminOrdersPage() {
             </button>
             <button
               onClick={() => setFilterStatus('todos')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition min-h-[44px] text-sm sm:text-base ${
                 filterStatus === 'todos'
                   ? 'bg-blue-500 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -195,22 +195,22 @@ export default function AdminOrdersPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {orders.map(order => (
-              <div key={order.id} className="bg-white rounded-xl shadow-lg p-6">
-                <div className="flex items-start justify-between mb-4">
+              <div key={order.id} className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-800">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
                       Pedido #{order.id}
                     </h3>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-500">
                       {new Date(order.createdAt).toLocaleString('es-CO')}
                     </p>
                   </div>
-                  {getStatusBadge(order.status)}
+                  <div className="self-start sm:self-auto">{getStatusBadge(order.status)}</div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                   {/* Información del cliente */}
                   <div className="p-4 bg-blue-50 rounded-lg">
                     <h4 className="font-bold text-blue-900 mb-2">👤 Cliente:</h4>
@@ -280,18 +280,18 @@ export default function AdminOrdersPage() {
 
                 {/* Botones de acción */}
                 {order.status === 'completado' && (
-                  <div className="flex gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
                     <button
                       onClick={() => handleConfirmOrder(order.id)}
                       disabled={submitting}
-                      className="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-bold disabled:opacity-50"
+                      className="flex-1 px-4 sm:px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-bold disabled:opacity-50 min-h-[44px] text-sm sm:text-base"
                     >
                       ✅ Confirmar Despacho
                     </button>
                     <button
                       onClick={() => handleOpenObservationModal(order)}
                       disabled={submitting}
-                      className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-bold disabled:opacity-50"
+                      className="flex-1 px-4 sm:px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-bold disabled:opacity-50 min-h-[44px] text-sm sm:text-base"
                     >
                       📝 Agregar Observación
                     </button>
@@ -305,13 +305,14 @@ export default function AdminOrdersPage() {
 
       {/* Modal de observaciones */}
       {showObservationModal && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">📝 Agregar Observación</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold">📝 Agregar Observación</h2>
               <button
                 onClick={() => setShowObservationModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-3xl font-bold"
+                className="text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl font-bold min-w-[44px] min-h-[44px] flex items-center justify-center"
+                aria-label="Cerrar"
               >
                 ×
               </button>
@@ -329,18 +330,18 @@ export default function AdminOrdersPage() {
               placeholder="Ej: Dirección no encontrada, Cliente no disponible, etc."
             />
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 onClick={() => setShowObservationModal(false)}
                 disabled={submitting}
-                className="flex-1 px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 font-bold disabled:opacity-50"
+                className="flex-1 px-4 sm:px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 font-bold disabled:opacity-50 min-h-[44px] text-sm sm:text-base"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSubmitObservation}
                 disabled={submitting || !observacion.trim()}
-                className="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-bold disabled:opacity-50"
+                className="flex-1 px-4 sm:px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-bold disabled:opacity-50 min-h-[44px] text-sm sm:text-base"
               >
                 {submitting ? 'Guardando...' : 'Guardar Observación'}
               </button>

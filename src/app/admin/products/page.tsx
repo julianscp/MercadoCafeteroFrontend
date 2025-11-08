@@ -100,10 +100,10 @@ export default function ProductsPage() {
     if (element) {
       // Obtener la posición del elemento relativa al documento
       const elementPosition = element.getBoundingClientRect().top;
-      // Offset responsive: menor en móviles (header más pequeño), mayor en desktop
-      const isMobile = window.innerWidth < 1024;
-      const offset = isMobile ? 140 : 180;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      // Offset responsive: calcular basado en el header
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : (window.innerWidth < 1024 ? 60 : 73);
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
       
       // Hacer scroll en la ventana completa
       window.scrollTo({
@@ -403,7 +403,7 @@ export default function ProductsPage() {
         )}
 
         {/* Barra lateral vertical - oculta en móviles, visible en desktop */}
-        <aside className={`fixed lg:sticky top-0 lg:top-[73px] z-40 h-screen lg:h-fit w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
+        <aside className={`fixed lg:sticky lg:top-0 z-40 h-screen lg:h-[calc(100vh)] w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30 transition-transform duration-300 overflow-y-auto ${
           menuMovilOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}>
           <div className="p-4">

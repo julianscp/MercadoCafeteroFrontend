@@ -112,18 +112,18 @@ export default function LogsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Logs del Sistema</h1>
-          <p className="text-gray-600">Monitoreo y auditoría de eventos del sistema</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">📊 Logs del Sistema</h1>
+          <p className="text-sm sm:text-base text-gray-600">Monitoreo y auditoría de eventos del sistema</p>
         </div>
 
         {/* Filtros */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtros de Búsqueda</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Filtros de Búsqueda</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nivel</label>
               <select
@@ -188,22 +188,22 @@ export default function LogsPage() {
             </div>
           </div>
 
-          <div className="flex gap-3 mt-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4">
             <button
               onClick={applyFilters}
-              className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors"
+              className="px-4 py-3 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors min-h-[44px] text-sm sm:text-base"
             >
               🔍 Aplicar Filtros
             </button>
             <button
               onClick={clearFilters}
-              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+              className="px-4 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors min-h-[44px] text-sm sm:text-base"
             >
               🗑️ Limpiar
             </button>
             <button
               onClick={loadLogs}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              className="px-4 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors min-h-[44px] text-sm sm:text-base"
             >
               🔄 Actualizar
             </button>
@@ -232,7 +232,7 @@ export default function LogsPage() {
               <p className="text-gray-600">No se encontraron logs con los filtros aplicados.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>

@@ -96,20 +96,20 @@ export default function VentasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-800 to-orange-800 bg-clip-text text-transparent mb-4">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-amber-800 to-orange-800 bg-clip-text text-transparent mb-4">
             📊 Estadísticas de Ventas
           </h1>
           
           {/* Selector de período */}
-          <div className="flex gap-4 mb-6">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
             {(['day', 'week', 'month'] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-all duration-200 min-h-[44px] text-sm sm:text-base ${
                   period === p
                     ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg transform scale-105'
                     : 'bg-white text-gray-700 hover:bg-amber-100 hover:text-amber-800 shadow-md'
@@ -134,67 +134,67 @@ export default function VentasPage() {
         ) : stats ? (
           <div className="space-y-6">
             {/* Cards de resumen */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-green-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-green-200">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Ventas</p>
-                    <p className="text-3xl font-bold text-green-700 mt-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Total de Ventas</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-700 mt-2 break-words">
                       {formatCurrency(stats.totalSales)}
                     </p>
                   </div>
-                  <div className="text-4xl">💰</div>
+                  <div className="text-3xl sm:text-4xl ml-2 flex-shrink-0">💰</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-blue-200">
+              <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-blue-200">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Pedidos Realizados</p>
-                    <p className="text-3xl font-bold text-blue-700 mt-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Pedidos Realizados</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-700 mt-2">
                       {stats.orderCount}
                     </p>
                   </div>
-                  <div className="text-4xl">📦</div>
+                  <div className="text-3xl sm:text-4xl ml-2 flex-shrink-0">📦</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-purple-200">
+              <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-purple-200 sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Promedio por Pedido</p>
-                    <p className="text-3xl font-bold text-purple-700 mt-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Promedio por Pedido</p>
+                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-700 mt-2 break-words">
                       {stats.orderCount > 0
                         ? formatCurrency(stats.totalSales / stats.orderCount)
                         : formatCurrency(0)}
                     </p>
                   </div>
-                  <div className="text-4xl">📈</div>
+                  <div className="text-3xl sm:text-4xl ml-2 flex-shrink-0">📈</div>
                 </div>
               </div>
             </div>
 
             {/* Producto más vendido */}
             {stats.topProduct && (
-              <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-200">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+              <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-amber-200">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
                   <span>🏆</span>
                   <span>Producto Más Vendido</span>
                 </h2>
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-6 border-2 border-amber-300">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-800">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 sm:p-6 border-2 border-amber-300">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xl sm:text-2xl font-bold text-gray-800 break-words">
                         {stats.topProduct.nombre}
                       </h3>
-                      <p className="text-lg text-gray-600 mt-2">
+                      <p className="text-base sm:text-lg text-gray-600 mt-2">
                         Cantidad vendida: <span className="font-bold text-amber-700">{stats.topProduct.cantidad}</span> unidades
                       </p>
-                      <p className="text-lg text-gray-600">
+                      <p className="text-base sm:text-lg text-gray-600">
                         Total generado: <span className="font-bold text-green-700">{formatCurrency(stats.topProduct.total)}</span>
                       </p>
                     </div>
-                    <div className="text-6xl">🎯</div>
+                    <div className="text-4xl sm:text-6xl flex-shrink-0">🎯</div>
                   </div>
                 </div>
               </div>
@@ -202,12 +202,12 @@ export default function VentasPage() {
 
             {/* Lista de productos vendidos */}
             {stats.products.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+              <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 border-2 border-gray-200">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
                   <span>📋</span>
                   <span>Productos Vendidos</span>
                 </h2>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-4 sm:mx-0">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gradient-to-r from-gray-100 to-gray-200">
                       <tr>
@@ -247,8 +247,8 @@ export default function VentasPage() {
             )}
 
             {/* Información del período */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-gray-200">
-              <p className="text-sm text-gray-600">
+            <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border-2 border-gray-200">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Período: <span className="font-semibold">{formatDate(stats.startDate)}</span> hasta{' '}
                 <span className="font-semibold">{formatDate(stats.endDate)}</span>
               </p>

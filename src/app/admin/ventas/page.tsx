@@ -162,7 +162,7 @@ export default function VentasPage() {
               <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-purple-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Ticket Promedio</p>
+                    <p className="text-sm font-medium text-gray-600">Promedio por Pedido</p>
                     <p className="text-3xl font-bold text-purple-700 mt-2">
                       {stats.orderCount > 0
                         ? formatCurrency(stats.totalSales / stats.orderCount)

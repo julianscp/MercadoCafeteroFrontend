@@ -37,9 +37,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-background-light text-neutral">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 w-full">
       <header className="sticky top-0 z-50 w-full bg-amber-100/95 backdrop-blur-sm shadow-lg border-b border-amber-200/30">
-        <div className="mx-auto flex max-w-6xl items-center justify-between p-4">
+        <div className="mx-auto flex w-full items-center justify-between p-4 px-6">
           <Link href="/" className="font-bold text-amber-800 text-lg hover:text-amber-700 transition-colors">
             ☕ Mercado Cafetero - Administración
           </Link>
@@ -58,7 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl p-4 md:p-6">
+      <main className="w-full min-h-[calc(100vh-80px)] py-8 px-8">
         {children}
       </main>
     </div>

@@ -356,11 +356,12 @@ export default function ProductsPage() {
   const empty = !loading && !err && items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       <div className="max-w-7xl mx-auto">
-        <div className="flex gap-8">
-          {/* Barra lateral de navegación */}
-          <aside className="w-64 bg-white shadow-xl border-r-2 border-amber-200 flex-shrink-0 rounded-2xl overflow-hidden">
+        {/* Contenedor principal con barra lateral integrada */}
+        <div className="flex items-start">
+          {/* Barra lateral de navegación - Se mueve con el scroll */}
+          <aside className="w-64 bg-white shadow-lg border-r-2 border-amber-200 flex-shrink-0 self-start">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-amber-800 mb-6 flex items-center gap-2">
                 <span>☕</span>
@@ -386,7 +387,7 @@ export default function ProductsPage() {
           </aside>
 
           {/* Contenido principal */}
-          <div className="flex-1 w-full min-w-0">
+          <div className="flex-1 w-full min-w-0 p-8">
           {/* Sección: Lista de Productos */}
           <div 
             ref={(el) => { sectionRefs.current['productos'] = el; }}
@@ -1251,6 +1252,7 @@ export default function ProductsPage() {
           </div>
         </div>
       </div>
+    </div>
 
       <style jsx>{`
         .input-modern {

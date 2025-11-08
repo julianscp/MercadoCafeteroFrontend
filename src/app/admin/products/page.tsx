@@ -54,7 +54,6 @@ export default function ProductsPage() {
   const [criticos, setCriticos] = useState<any[]>([]);
   const [loadingCriticos, setLoadingCriticos] = useState(false);
   const [errCriticos, setErrCriticos] = useState<string | null>(null);
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   // --- Logs / Movimientos ---
   const [logs, setLogs] = useState<any[]>([]);
@@ -274,7 +273,6 @@ export default function ProductsPage() {
       setErrCriticos(null);
       const { data } = await api.get<any[]>('/productos/criticos');
       setCriticos(Array.isArray(data) ? data : []);
-      setLastUpdate(new Date());
     } catch (e: any) {
       setErrCriticos(e?.response?.data?.message || 'No se pudieron obtener los críticos');
       setCriticos([]);
@@ -381,7 +379,7 @@ export default function ProductsPage() {
         <main className="flex-1 p-8">
           {/* Sección: Lista de Productos */}
           <div 
-            ref={(el) => (sectionRefs.current['productos'] = el)}
+            ref={(el) => { sectionRefs.current['productos'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
             <div className="flex items-center justify-between mb-6">
@@ -520,7 +518,7 @@ export default function ProductsPage() {
 
           {/* Sección: Crear Producto */}
           <div 
-            ref={(el) => (sectionRefs.current['crear'] = el)}
+            ref={(el) => { sectionRefs.current['crear'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
             <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
@@ -647,14 +645,14 @@ export default function ProductsPage() {
 
             {!createOpen && (
               <div className="text-center py-8 text-gray-500">
-                <p>Haz clic en "Crear Producto" para agregar un nuevo producto</p>
+                <p>Haz clic en &ldquo;Crear Producto&rdquo; para agregar un nuevo producto</p>
               </div>
             )}
           </div>
 
           {/* Sección: Ajuste de Stock */}
           <div 
-            ref={(el) => (sectionRefs.current['ajuste'] = el)}
+            ref={(el) => { sectionRefs.current['ajuste'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
             <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
@@ -741,7 +739,7 @@ export default function ProductsPage() {
 
           {/* Sección: Productos Críticos */}
           <div 
-            ref={(el) => (sectionRefs.current['criticos'] = el)}
+            ref={(el) => { sectionRefs.current['criticos'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-red-200"
           >
             <div className="flex items-center justify-between mb-6">
@@ -818,7 +816,7 @@ export default function ProductsPage() {
 
           {/* Sección: Movimientos de Stock */}
           <div 
-            ref={(el) => (sectionRefs.current['movimientos'] = el)}
+            ref={(el) => { sectionRefs.current['movimientos'] = el; }}
             className="mb-12 bg-white rounded-2xl shadow-xl p-8 border-2 border-amber-100"
           >
             <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">

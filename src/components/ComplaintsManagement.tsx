@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 
 type Complaint = {

@@ -378,7 +378,7 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       <div className="max-w-7xl mx-auto flex">
         {/* Barra lateral vertical clonada del banner amarillo */}
-        <aside className="sticky top-[73px] z-40 h-[calc(100vh-73px)] w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30">
+        <aside className="sticky top-[73px] z-40 h-fit w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30">
           <div className="p-4">
             <div className="font-bold text-amber-800 text-lg mb-6 flex items-center gap-2">
               <span>☕</span>

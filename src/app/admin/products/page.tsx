@@ -376,34 +376,35 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      {/* Pestaña clonada del banner amarillo con funciones de productos */}
-      <div className="sticky top-[73px] z-40 w-full bg-amber-100/95 backdrop-blur-sm shadow-lg border-b border-amber-200/30">
-        <div className="mx-auto flex max-w-7xl items-center justify-between p-4 px-6">
-          <div className="font-bold text-amber-800 text-lg flex items-center gap-2">
-            <span>☕</span>
-            <span>Gestión de Productos</span>
+      <div className="max-w-7xl mx-auto flex">
+        {/* Barra lateral vertical clonada del banner amarillo */}
+        <aside className="sticky top-[73px] z-40 h-[calc(100vh-73px)] w-64 flex-shrink-0 bg-amber-100/95 backdrop-blur-sm shadow-lg border-r border-amber-200/30">
+          <div className="p-4">
+            <div className="font-bold text-amber-800 text-lg mb-6 flex items-center gap-2">
+              <span>☕</span>
+              <span>Gestión de Productos</span>
+            </div>
+            <nav className="flex flex-col gap-2">
+              {SECTIONS.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className={`w-full text-left rounded-lg px-4 py-2 font-medium transition-all duration-200 flex items-center gap-2 text-sm ${
+                    activeSection === section.id
+                      ? 'bg-amber-200/60 text-amber-900 shadow-md'
+                      : 'bg-amber-50/60 text-amber-800 hover:bg-amber-200/40 hover:text-amber-900 hover:shadow-sm'
+                  }`}
+                >
+                  <span>{section.icon}</span>
+                  <span>{section.label}</span>
+                </button>
+              ))}
+            </nav>
           </div>
-          <nav className="flex items-center gap-3 text-sm">
-            {SECTIONS.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                className={`rounded-lg px-4 py-2 font-medium transition-all duration-200 flex items-center gap-2 ${
-                  activeSection === section.id
-                    ? 'bg-amber-200/60 text-amber-900 shadow-md'
-                    : 'bg-amber-50/60 text-amber-800 hover:bg-amber-200/40 hover:text-amber-900 hover:shadow-sm'
-                }`}
-              >
-                <span>{section.icon}</span>
-                <span>{section.label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
+        </aside>
 
-      {/* Contenido principal */}
-      <div className="max-w-7xl mx-auto p-8">
+        {/* Contenido principal */}
+        <div className="flex-1 w-full min-w-0 p-8">
           {/* Sección: Lista de Productos */}
           <div 
             id="section-productos"

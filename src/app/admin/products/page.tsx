@@ -407,10 +407,14 @@ export default function ProductsPage() {
           menuMovilOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}>
           <div className="p-4">
-            <div className="font-bold text-amber-800 text-base sm:text-lg mb-6 flex items-center gap-2">
-              <span>☕</span>
-              <span className="hidden sm:inline">Gestión de Productos</span>
-              <span className="sm:hidden">Menú</span>
+            <div className="mb-6">
+              <div className="inline-block bg-amber-100/95 rounded-lg px-4 py-2 border border-amber-200/30">
+                <div className="font-bold text-amber-800 text-base sm:text-lg flex items-center gap-2 whitespace-nowrap">
+                  <span>☕</span>
+                  <span className="hidden sm:inline">Gestión de Productos</span>
+                  <span className="sm:hidden">Menú</span>
+                </div>
+              </div>
             </div>
             <nav className="flex flex-col gap-2">
               {SECTIONS.map((section) => (

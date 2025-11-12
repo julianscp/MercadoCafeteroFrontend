@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
@@ -52,31 +52,40 @@ export default function DashboardPage() {
   const [loadingStats, setLoadingStats] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const loadStats = useCallback(async () => {
+    try {
+      setLoadingStats(true);
+      setError(null);
+      console.log('Cargando estadísticas del dashboard...');
+      const response = await api.get<DashboardStats>('/clientes/admin/dashboard');
+      console.log('Datos recibidos:', response.data);
+      setStats(response.data);
+    } catch (err: any) {
+      console.error('Error cargando estadísticas del dashboard:', err);
+      console.error('Error response:', err?.response);
+      console.error('Error data:', err?.response?.data);
+      const errorMessage = err?.response?.data?.message 
+        || err?.message 
+        || 'Error al cargar estadísticas del dashboard';
+      setError(errorMessage);
+      setStats(null);
+    } finally {
+      setLoadingStats(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (!loading && (!user || user.rol !== 'admin')) {
       router.replace('/auth/login');
+      return;
     }
   }, [user, loading, router]);
 
   useEffect(() => {
-    if (user && user.rol === 'admin') {
+    if (user && user.rol === 'admin' && !loading) {
       loadStats();
     }
-  }, [user]);
-
-  const loadStats = async () => {
-    try {
-      setLoadingStats(true);
-      setError(null);
-      const response = await api.get<DashboardStats>('/clientes/admin/dashboard');
-      setStats(response.data);
-    } catch (err: any) {
-      console.error('Error cargando estadísticas del dashboard:', err);
-      setError(err?.response?.data?.message || 'Error al cargar estadísticas del dashboard');
-    } finally {
-      setLoadingStats(false);
-    }
-  };
+  }, [user, loading, loadStats]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('es-CO', {
@@ -115,7 +124,14 @@ export default function DashboardPage() {
 
         {error && (
           <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg">
-            {error}
+            <p className="font-semibold">Error al cargar el dashboard</p>
+            <p>{error}</p>
+            <button
+              onClick={loadStats}
+              className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            >
+              Reintentar
+            </button>
           </div>
         )}
 

@@ -48,6 +48,7 @@ export default function AdminHeader({ pathname, logout }: AdminHeaderProps) {
 
         {/* Desktop: Navegación horizontal en una sola línea */}
         <nav className="hidden lg:flex items-center gap-3 text-sm">
+          <NavItem href="/admin/dashboard" pathname={pathname}>Dashboard</NavItem>
           <NavItem href="/admin/products" pathname={pathname}>Productos</NavItem>
           <NavItem href="/admin/orders" pathname={pathname}>Pedidos</NavItem>
           <NavItem href="/admin/ventas" pathname={pathname}>Ventas</NavItem>
@@ -75,6 +76,7 @@ export default function AdminHeader({ pathname, logout }: AdminHeaderProps) {
       {/* Mobile: Menú desplegable */}
       {menuOpen && (
         <nav className="lg:hidden flex flex-col gap-2 px-4 pb-4">
+          <NavItem href="/admin/dashboard" pathname={pathname} onClick={() => setMenuOpen(false)}>Dashboard</NavItem>
           <NavItem href="/admin/products" pathname={pathname} onClick={() => setMenuOpen(false)}>Productos</NavItem>
           <NavItem href="/admin/orders" pathname={pathname} onClick={() => setMenuOpen(false)}>Pedidos</NavItem>
           <NavItem href="/admin/ventas" pathname={pathname} onClick={() => setMenuOpen(false)}>Ventas</NavItem>

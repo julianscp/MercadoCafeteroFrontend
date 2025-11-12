@@ -6,8 +6,8 @@ export default function AdminIndex() {
   const router = useRouter();
 
   useEffect(() => {
-    // apenas alguien entre a /admin lo mandamos a /admin/products
-    router.replace('/admin/products');
+    // Redirigir a /admin/dashboard cuando alguien entre a /admin
+    router.replace('/admin/dashboard');
   }, [router]);
 
   return null;
